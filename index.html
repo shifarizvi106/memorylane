@@ -888,1072 +888,1115 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // Data initialization
-        const friends = [
-            { id: 1, name: 'Shifa', avatar: 'S', color: '#6366f1' },
-            { id: 2, name: 'Ayaan', avatar: 'A', color: '#ef4444' },
-            { id: 3, name: 'Ritika', avatar: 'R', color: '#10b981' },
-            { id: 4, name: 'Vidhi', avatar: 'V', color: '#f59e0b' },
-            { id: 5, name: 'Saksham', avatar: 'SK', color: '#8b5cf6' },
-            { id: 6, name: 'Sai', avatar: 'SI', color: '#06b6d4' },
-            { id: 7, name: 'Kunal', avatar: 'K', color: '#f97316' },
-            { id: 8, name: 'Juili', avatar: 'J', color: '#ec4899' },
-            { id: 9, name: 'Harshit', avatar: 'H', color: '#84cc16' },
-            { id: 10, name: 'Palak', avatar: 'P', color: '#f43f5e' },
-            { id: 11, name: 'Amrut', avatar: 'A', color: '#0ea5e9' }
-        ];
+       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // Data initialization
+    const friends = [
+        { id: 1, name: 'Shifa', avatar: 'S', color: '#6366f1' },
+        { id: 2, name: 'Ayaan', avatar: 'A', color: '#ef4444' },
+        { id: 3, name: 'Ritika', avatar: 'R', color: '#10b981' },
+        { id: 4, name: 'Vidhi', avatar: 'V', color: '#f59e0b' },
+        { id: 5, name: 'Saksham', avatar: 'SK', color: '#8b5cf6' },
+        { id: 6, name: 'Sai', avatar: 'SI', color: '#06b6d4' },
+        { id: 7, name: 'Kunal', avatar: 'K', color: '#f97316' },
+        { id: 8, name: 'Juili', avatar: 'J', color: '#ec4899' },
+        { id: 9, name: 'Harshit', avatar: 'H', color: '#84cc16' },
+        { id: 10, name: 'Palak', avatar: 'P', color: '#f43f5e' },
+        { id: 11, name: 'Amrut', avatar: 'A', color: '#0ea5e9' }
+    ];
 
-        const friendBirthdays = {
-            2: '2008-01-16',
-            3: '2008-07-6',
-            4: '2008-11-12',
-            5: '2009-01-23',
-            6: '2008-03-4',
-            7: '2008-10-19',
-            8: '2008-05-25',
-            9: '2007-01-24',
-            10: '2007-11-06',
-            11: '2005-09-20'
-        };
+    const friendBirthdays = {
+        2: '2008-01-16',
+        3: '2008-07-06',
+        4: '2008-11-12',
+        5: '2009-01-23',
+        6: '2008-03-04',
+        7: '2008-10-19',
+        8: '2008-05-25',
+        9: '2007-01-24',
+        10: '2007-11-06',
+        11: '2005-09-20'
+    };
 
-        let memories = JSON.parse(localStorage.getItem('memories')) || [];
-        let albums = JSON.parse(localStorage.getItem('albums')) || [];
-        let currentViewingMemory = null;
-        let map = null;
+    let memories = JSON.parse(localStorage.getItem('memories')) || [];
+    let albums = JSON.parse(localStorage.getItem('albums')) || [];
+    let currentViewingMemory = null;
+    let map = null;
 
-        // Initialize the application
-        function init() {
-            // Set up dark mode toggle
-            const darkModeToggle = document.getElementById('darkModeToggle');
-            const isDarkMode = localStorage.getItem('darkMode') === 'true';
-            darkModeToggle.checked = isDarkMode;
-            document.body.classList.toggle('dark-mode', isDarkMode);
-            
-            darkModeToggle.addEventListener('change', function() {
-                document.body.classList.toggle('dark-mode', this.checked);
-                localStorage.setItem('darkMode', this.checked);
+    // Initialize the application
+    function init() {
+        // Set up dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        darkModeToggle.checked = isDarkMode;
+        document.body.classList.toggle('dark-mode', isDarkMode);
+        
+        darkModeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode', this.checked);
+            localStorage.setItem('darkMode', this.checked);
+        });
+
+        // Set up navigation
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const view = this.getAttribute('data-view');
+                showView(view);
+                
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
             });
+        });
 
-            // Set up navigation
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function() {
-                    const view = this.getAttribute('data-view');
-                    showView(view);
-                    
-                    // Update active nav link
-                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                });
+        // Initialize friend list
+        renderFriendList();
+        
+        // Initialize author filter
+        renderAuthorFilter();
+        
+        // Initialize memories
+        renderMemories();
+        
+        // Initialize albums
+        renderAlbums();
+        
+        // Initialize stats
+        renderStats();
+        
+        // Initialize on this day
+        renderOnThisDay();
+        
+        // Initialize map if needed
+        if (document.getElementById('memoryMap')) {
+            initMap();
+        }
+        
+        // Set up search and filter events
+        document.getElementById('searchInput').addEventListener('input', renderMemories);
+        document.getElementById('filterAuthor').addEventListener('change', renderMemories);
+        document.getElementById('filterDate').addEventListener('change', renderMemories);
+        
+        // Set up image preview for memory modal
+        document.getElementById('memoryImage').addEventListener('change', function(e) {
+            previewImage(e, 'imagePreview');
+        });
+        
+        // Set up image preview for album modal
+        document.getElementById('albumCover').addEventListener('change', function(e) {
+            previewImage(e, 'albumCoverPreview');
+        });
+        
+        // Add some sample data if empty
+        if (memories.length === 0) {
+            addSampleData();
+        }
+    }
+
+    // Show a specific view
+    function showView(viewName) {
+        document.querySelectorAll('.view').forEach(view => {
+            view.classList.remove('active');
+        });
+        
+        document.querySelector(`.${viewName}-view`).classList.add('active');
+        
+        // Initialize map if showing map view
+        if (viewName === 'map' && !map) {
+            setTimeout(initMap, 100);
+        }
+    }
+
+    // Render friend list in sidebar
+    function renderFriendList() {
+        const friendList = document.getElementById('friendList');
+        friendList.innerHTML = '';
+        
+        friends.forEach(friend => {
+            const friendItem = document.createElement('div');
+            friendItem.className = 'friend-item';
+            friendItem.innerHTML = `
+                <div class="friend-avatar" style="background-color: ${friend.color}">${friend.avatar}</div>
+                <span>${friend.name}</span>
+            `;
+            friendItem.addEventListener('click', () => {
+                document.getElementById('filterAuthor').value = friend.name;
+                renderMemories();
             });
+            friendList.appendChild(friendItem);
+        });
+    }
 
-            // Initialize friend list
-            renderFriendList();
+    // Render author filter dropdown
+    function renderAuthorFilter() {
+        const filterAuthor = document.getElementById('filterAuthor');
+        const memoryAuthor = document.getElementById('memoryAuthor');
+        
+        // Clear existing options except the first one
+        while (filterAuthor.children.length > 1) {
+            filterAuthor.removeChild(filterAuthor.lastChild);
+        }
+        while (memoryAuthor.children.length > 0) {
+            memoryAuthor.removeChild(memoryAuthor.lastChild);
+        }
+        
+        // Add friend options
+        friends.forEach(friend => {
+            const option1 = document.createElement('option');
+            option1.value = friend.name;
+            option1.textContent = friend.name;
+            filterAuthor.appendChild(option1);
             
-            // Initialize author filter
-            renderAuthorFilter();
+            const option2 = document.createElement('option');
+            option2.value = friend.name;
+            option2.textContent = friend.name;
+            memoryAuthor.appendChild(option2);
+        });
+    }
+
+    // Render memories in the timeline
+    function renderMemories() {
+        const memoriesGrid = document.getElementById('memoriesGrid');
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const authorFilter = document.getElementById('filterAuthor').value;
+        const dateFilter = document.getElementById('filterDate').value;
+        
+        // Filter memories
+        let filteredMemories = memories.filter(memory => {
+            // Search filter
+            if (searchTerm && !memory.text.toLowerCase().includes(searchTerm) && 
+                !memory.location.toLowerCase().includes(searchTerm)) {
+                return false;
+            }
             
-            // Initialize memories
+            // Author filter
+            if (authorFilter && memory.author !== authorFilter) {
+                return false;
+            }
+            
+            // Date filter
+            if (dateFilter) {
+                const memoryDate = new Date(memory.timestamp);
+                const now = new Date();
+                
+                if (dateFilter === 'week') {
+                    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    if (memoryDate < weekAgo) return false;
+                } else if (dateFilter === 'month') {
+                    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                    if (memoryDate < monthAgo) return false;
+                } else if (dateFilter === 'year') {
+                    const yearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+                    if (memoryDate < yearAgo) return false;
+                }
+            }
+            
+            return true;
+        });
+        
+        // Sort by date (newest first)
+        filteredMemories.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        
+        // Render memories
+        if (filteredMemories.length === 0) {
+            memoriesGrid.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <h3>No memories found</h3>
+                    <p>Try changing your search or filters, or add a new memory!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        memoriesGrid.innerHTML = '';
+        filteredMemories.forEach(memory => {
+            const memoryCard = document.createElement('div');
+            memoryCard.className = 'memory-card';
+            memoryCard.innerHTML = `
+                <img src="${memory.image}" alt="Memory" class="memory-image">
+                <div class="memory-content">
+                    <div class="memory-meta">
+                        <span>${formatDate(memory.timestamp)}</span>
+                        <span>${memory.author}</span>
+                    </div>
+                    <div class="memory-text">${memory.text}</div>
+                    <div class="memory-actions">
+                        <div class="reactions">
+                            <button class="reaction-btn" onclick="reactToMemory(${memory.id}, '❤️')">❤️ ${memory.reactions['❤️'] || 0}</button>
+                            <button class="reaction-btn" onclick="reactToMemory(${memory.id}, '😂')">😂 ${memory.reactions['😂'] || 0}</button>
+                            <button class="reaction-btn" onclick="reactToMemory(${memory.id}, '🔥')">🔥 ${memory.reactions['🔥'] || 0}</button>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn" onclick="viewMemory(${memory.id})">👁️</button>
+                            <button class="action-btn" onclick="shareMemory(${memory.id})">📤</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            memoriesGrid.appendChild(memoryCard);
+        });
+        
+        // Update quick stats
+        updateQuickStats();
+    }
+
+    // Render albums
+    function renderAlbums() {
+        const albumsGrid = document.getElementById('albumsGrid');
+        
+        if (albums.length === 0) {
+            albumsGrid.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📚</div>
+                    <h3>No albums yet</h3>
+                    <p>Create your first album to organize memories!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        albumsGrid.innerHTML = '';
+        albums.forEach(album => {
+            const albumCard = document.createElement('div');
+            albumCard.className = 'memory-card';
+            albumCard.innerHTML = `
+                <img src="${album.cover || 'https://via.placeholder.com/300x200?text=No+Cover'}" alt="${album.name}" class="memory-image">
+                <div class="memory-content">
+                    <div class="memory-meta">
+                        <span>${album.memories.length} memories</span>
+                    </div>
+                    <div class="memory-text">
+                        <h3>${album.name}</h3>
+                        <p>${album.description}</p>
+                    </div>
+                    <div class="memory-actions">
+                        <button class="btn btn-primary" onclick="viewAlbum(${album.id})">View Album</button>
+                    </div>
+                </div>
+            `;
+            albumsGrid.appendChild(albumCard);
+        });
+    }
+
+    // Render statistics
+    function renderStats() {
+        const statsContent = document.getElementById('statsContent');
+        
+        // Calculate stats
+        const totalMemories = memories.length;
+        const memoriesThisMonth = memories.filter(m => {
+            const memoryDate = new Date(m.timestamp);
+            const now = new Date();
+            return memoryDate.getMonth() === now.getMonth() && 
+                   memoryDate.getFullYear() === now.getFullYear();
+        }).length;
+        
+        const mostActiveFriend = getMostActiveFriend();
+        const topReaction = getTopReaction();
+        
+        statsContent.innerHTML = `
+            <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 30px;">
+                <div class="stat-card">
+                    <div class="stat-value">${totalMemories}</div>
+                    <div class="stat-label">Total Memories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${memoriesThisMonth}</div>
+                    <div class="stat-label">This Month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${mostActiveFriend.name}</div>
+                    <div class="stat-label">Most Active</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${topReaction.emoji} ${topReaction.count}</div>
+                    <div class="stat-label">Top Reaction</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Memories by Friend</h3>
+                <div id="friendStats">
+                    ${renderFriendStats()}
+                </div>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Memories by Month</h3>
+                <div id="monthlyStats">
+                    ${renderMonthlyStats()}
+                </div>
+            </div>
+        `;
+    }
+
+    // Render on this day memories
+    function renderOnThisDay() {
+        const onThisDayContent = document.getElementById('onThisDayContent');
+        const today = new Date();
+        const todayMonth = today.getMonth();
+        const todayDate = today.getDate();
+        
+        const onThisDayMemories = memories.filter(memory => {
+            const memoryDate = new Date(memory.timestamp);
+            return memoryDate.getMonth() === todayMonth && memoryDate.getDate() === todayDate;
+        });
+        
+        if (onThisDayMemories.length === 0) {
+            onThisDayContent.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-state-icon">📅</div>
+                    <h3>No memories on this day</h3>
+                    <p>Check back tomorrow or add some new memories!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        onThisDayContent.innerHTML = `
+            <h3>Memories from ${todayDate} ${getMonthName(todayMonth)}</h3>
+            <div class="memories-grid">
+                ${onThisDayMemories.map(memory => `
+                    <div class="memory-card">
+                        <img src="${memory.image}" alt="Memory" class="memory-image">
+                        <div class="memory-content">
+                            <div class="memory-meta">
+                                <span>${new Date(memory.timestamp).getFullYear()}</span>
+                                <span>${memory.author}</span>
+                            </div>
+                            <div class="memory-text">${memory.text}</div>
+                            <div class="memory-actions">
+                                <button class="btn btn-primary" onclick="viewMemory(${memory.id})">View Memory</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    // Initialize map
+    function initMap() {
+        if (map) {
+            map.remove();
+        }
+        
+        map = L.map('memoryMap').setView([19.0760, 72.8777], 10); // Mumbai coordinates
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Add markers for memories with locations
+        memories.forEach(memory => {
+            if (memory.location && memory.lat && memory.lng) {
+                L.marker([memory.lat, memory.lng])
+                    .addTo(map)
+                    .bindPopup(`
+                        <div>
+                            <img src="${memory.image}" style="width: 100px; height: 100px; object-fit: cover;">
+                            <p><strong>${memory.author}</strong></p>
+                            <p>${memory.text}</p>
+                            <p><small>${formatDate(memory.timestamp)}</small></p>
+                        </div>
+                    `);
+            }
+        });
+    }
+
+    // Show memory modal
+    function showMemoryModal() {
+        // Reset form
+        document.getElementById('memoryImage').value = '';
+        document.getElementById('memoryText').value = '';
+        document.getElementById('memoryLocation').value = '';
+        document.getElementById('memoryAuthor').value = 'Shifa';
+        document.getElementById('memoryReminder').value = '';
+        document.getElementById('memoryAlbum').value = '';
+        document.getElementById('imagePreview').innerHTML = '<span>No image selected</span>';
+        
+        // Render friend tags
+        renderFriendTags();
+        
+        // Render album options
+        renderAlbumOptions();
+        
+        // Show modal
+        document.getElementById('memoryModal').style.display = 'flex';
+    }
+
+    // Close memory modal
+    function closeMemoryModal() {
+        document.getElementById('memoryModal').style.display = 'none';
+    }
+
+    // Show album modal
+    function showAlbumModal() {
+        // Reset form
+        document.getElementById('albumName').value = '';
+        document.getElementById('albumDescription').value = '';
+        document.getElementById('albumCover').value = '';
+        document.getElementById('albumCoverPreview').innerHTML = '<span>No image selected</span>';
+        
+        // Show modal
+        document.getElementById('albumModal').style.display = 'flex';
+    }
+
+    // Close album modal
+    function closeAlbumModal() {
+        document.getElementById('albumModal').style.display = 'none';
+    }
+
+    // Preview image before upload
+    function previewImage(event, previewElementId) {
+        const file = event.target.files[0];
+        const preview = document.getElementById(previewElementId);
+        
+        if (file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+            }
+            
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = '<span>No image selected</span>';
+        }
+    }
+
+    // Render friend tags for memory modal
+    function renderFriendTags() {
+        const friendsTags = document.getElementById('friendsTags');
+        friendsTags.innerHTML = '';
+        
+        friends.forEach(friend => {
+            if (friend.name === 'Shifa') return; // Skip yourself
+            
+            const friendTag = document.createElement('div');
+            friendTag.className = 'friend-tag';
+            friendTag.textContent = friend.name;
+            friendTag.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+            friendsTags.appendChild(friendTag);
+        });
+    }
+
+    // Render album options for memory modal
+    function renderAlbumOptions() {
+        const memoryAlbum = document.getElementById('memoryAlbum');
+        
+        // Clear existing options except the first one
+        while (memoryAlbum.children.length > 1) {
+            memoryAlbum.removeChild(memoryAlbum.lastChild);
+        }
+        
+        // Add album options
+        albums.forEach(album => {
+            const option = document.createElement('option');
+            option.value = album.id;
+            option.textContent = album.name;
+            memoryAlbum.appendChild(option);
+        });
+    }
+
+    // Save a new memory
+    function saveMemory() {
+        const imageFile = document.getElementById('memoryImage').files[0];
+        const text = document.getElementById('memoryText').value.trim();
+        const location = document.getElementById('memoryLocation').value.trim();
+        const author = document.getElementById('memoryAuthor').value;
+        const reminder = document.getElementById('memoryReminder').value;
+        const albumId = document.getElementById('memoryAlbum').value;
+        
+        if (!imageFile) {
+            alert('Please upload a photo!');
+            return;
+        }
+        
+        if (!text) {
+            alert('Please describe your memory!');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const memory = {
+                id: Date.now(),
+                image: e.target.result,
+                text: text,
+                location: location,
+                author: author,
+                timestamp: new Date().toISOString(),
+                reactions: { '❤️': 0, '😂': 0, '🔥': 0 },
+                comments: [],
+                taggedFriends: getSelectedFriends(),
+                reminder: reminder || null,
+                albumId: albumId || null
+            };
+            
+            // If location is provided, try to geocode it (simplified for demo)
+            if (location) {
+                // In a real app, you would use a geocoding service here
+                // For demo, we'll just set some random coordinates near Mumbai
+                memory.lat = 19.0760 + (Math.random() - 0.5) * 0.1;
+                memory.lng = 72.8777 + (Math.random() - 0.5) * 0.1;
+            }
+            
+            memories.unshift(memory);
+            localStorage.setItem('memories', JSON.stringify(memories));
+            
+            // If album is selected, add memory to album
+            if (albumId) {
+                const album = albums.find(a => a.id == albumId);
+                if (album) {
+                    album.memories.push(memory.id);
+                    localStorage.setItem('albums', JSON.stringify(albums));
+                }
+            }
+            
+            // Set reminder if provided
+            if (reminder) {
+                setMemoryReminder(memory.id, reminder);
+            }
+            
+            closeMemoryModal();
             renderMemories();
             
-            // Initialize albums
-            renderAlbums();
-            
-            // Initialize stats
-            renderStats();
-            
-            // Initialize on this day
-            renderOnThisDay();
-            
-            // Initialize map if needed
-            if (document.getElementById('memoryMap')) {
+            // If on map view, update map
+            if (map) {
                 initMap();
             }
             
-            // Set up search and filter events
-            document.getElementById('searchInput').addEventListener('input', renderMemories);
-            document.getElementById('filterAuthor').addEventListener('change', renderMemories);
-            document.getElementById('filterDate').addEventListener('change', renderMemories);
-            
-            // Set up image preview for memory modal
-            document.getElementById('memoryImage').addEventListener('change', function(e) {
-                previewImage(e, 'imagePreview');
-            });
-            
-            // Set up image preview for album modal
-            document.getElementById('albumCover').addEventListener('change', function(e) {
-                previewImage(e, 'albumCoverPreview');
-            });
-            
-            // Add some sample data if empty
-            if (memories.length === 0) {
-                addSampleData();
-            }
-        }
+            alert('Memory saved successfully!');
+        };
+        
+        reader.readAsDataURL(imageFile);
+    }
 
-        // Show a specific view
-        function showView(viewName) {
-            document.querySelectorAll('.view').forEach(view => {
-                view.classList.remove('active');
-            });
-            
-            document.querySelector(`.${viewName}-view`).classList.add('active');
-            
-            // Initialize map if showing map view
-            if (viewName === 'map' && !map) {
-                setTimeout(initMap, 100);
-            }
+    // Save a new album
+    function saveAlbum() {
+        const name = document.getElementById('albumName').value.trim();
+        const description = document.getElementById('albumDescription').value.trim();
+        const coverFile = document.getElementById('albumCover').files[0];
+        
+        if (!name) {
+            alert('Please enter an album name!');
+            return;
         }
-
-        // Render friend list in sidebar
-        function renderFriendList() {
-            const friendList = document.getElementById('friendList');
-            friendList.innerHTML = '';
-            
-            friends.forEach(friend => {
-                const friendItem = document.createElement('div');
-                friendItem.className = 'friend-item';
-                friendItem.innerHTML = `
-                    <div class="friend-avatar" style="background-color: ${friend.color}">${friend.avatar}</div>
-                    <span>${friend.name}</span>
-                `;
-                friendItem.addEventListener('click', () => {
-                    document.getElementById('filterAuthor').value = friend.name;
-                    renderMemories();
-                });
-                friendList.appendChild(friendItem);
-            });
-        }
-
-        // Render author filter dropdown
-        function renderAuthorFilter() {
-            const filterAuthor = document.getElementById('filterAuthor');
-            const memoryAuthor = document.getElementById('memoryAuthor');
-            
-            // Clear existing options except the first one
-            while (filterAuthor.children.length > 1) {
-                filterAuthor.removeChild(filterAuthor.lastChild);
-            }
-            while (memoryAuthor.children.length > 0) {
-                memoryAuthor.removeChild(memoryAuthor.lastChild);
-            }
-            
-            // Add friend options
-            friends.forEach(friend => {
-                const option1 = document.createElement('option');
-                option1.value = friend.name;
-                option1.textContent = friend.name;
-                filterAuthor.appendChild(option1);
-                
-                const option2 = document.createElement('option');
-                option2.value = friend.name;
-                option2.textContent = friend.name;
-                memoryAuthor.appendChild(option2);
-            });
-        }
-
-        // Render memories in the timeline
-        function renderMemories() {
-            const memoriesGrid = document.getElementById('memoriesGrid');
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const authorFilter = document.getElementById('filterAuthor').value;
-            const dateFilter = document.getElementById('filterDate').value;
-            
-            // Filter memories
-            let filteredMemories = memories.filter(memory => {
-                // Search filter
-                if (searchTerm && !memory.text.toLowerCase().includes(searchTerm) && 
-                    !memory.location.toLowerCase().includes(searchTerm)) {
-                    return false;
-                }
-                
-                // Author filter
-                if (authorFilter && memory.author !== authorFilter) {
-                    return false;
-                }
-                
-                // Date filter
-                if (dateFilter) {
-                    const memoryDate = new Date(memory.timestamp);
-                    const now = new Date();
-                    
-                    if (dateFilter === 'week') {
-                        const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-                        if (memoryDate < weekAgo) return false;
-                    } else if (dateFilter === 'month') {
-                        const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-                        if (memoryDate < monthAgo) return false;
-                    } else if (dateFilter === 'year') {
-                        const yearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
-                        if (memoryDate < yearAgo) return false;
-                    }
-                }
-                
-                return true;
-            });
-            
-            // Sort by date (newest first)
-            filteredMemories.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-            
-            // Render memories
-            if (filteredMemories.length === 0) {
-                memoriesGrid.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📭</div>
-                        <h3>No memories found</h3>
-                        <p>Try changing your search or filters, or add a new memory!</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            memoriesGrid.innerHTML = '';
-            filteredMemories.forEach(memory => {
-                const memoryCard = document.createElement('div');
-                memoryCard.className = 'memory-card';
-                memoryCard.innerHTML = `
-                    <img src="${memory.image}" alt="Memory" class="memory-image">
-                    <div class="memory-content">
-                        <div class="memory-meta">
-                            <span>${formatDate(memory.timestamp)}</span>
-                            <span>${memory.author}</span>
-                        </div>
-                        <div class="memory-text">${memory.text}</div>
-                        <div class="memory-actions">
-                            <div class="reactions">
-                                <button class="reaction-btn" onclick="reactToMemory(${memory.id}, '❤️')">❤️ ${memory.reactions['❤️'] || 0}</button>
-                                <button class="reaction-btn" onclick="reactToMemory(${memory.id}, '😂')">😂 ${memory.reactions['😂'] || 0}</button>
-                                <button class="reaction-btn" onclick="reactToMemory(${memory.id}, '🔥')">🔥 ${memory.reactions['🔥'] || 0}</button>
-                            </div>
-                            <div class="action-buttons">
-                                <button class="action-btn" onclick="viewMemory(${memory.id})">👁️</button>
-                                <button class="action-btn" onclick="shareMemory(${memory.id})">📤</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                memoriesGrid.appendChild(memoryCard);
-            });
-            
-            // Update quick stats
-            updateQuickStats();
-        }
-
-        // Render albums
-        function renderAlbums() {
-            const albumsGrid = document.getElementById('albumsGrid');
-            
-            if (albums.length === 0) {
-                albumsGrid.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📚</div>
-                        <h3>No albums yet</h3>
-                        <p>Create your first album to organize memories!</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            albumsGrid.innerHTML = '';
-            albums.forEach(album => {
-                const albumCard = document.createElement('div');
-                albumCard.className = 'memory-card';
-                albumCard.innerHTML = `
-                    <img src="${album.cover || 'https://via.placeholder.com/300x200?text=No+Cover'}" alt="${album.name}" class="memory-image">
-                    <div class="memory-content">
-                        <div class="memory-meta">
-                            <span>${album.memories.length} memories</span>
-                        </div>
-                        <div class="memory-text">
-                            <h3>${album.name}</h3>
-                            <p>${album.description}</p>
-                        </div>
-                        <div class="memory-actions">
-                            <button class="btn btn-primary" onclick="viewAlbum(${album.id})">View Album</button>
-                        </div>
-                    </div>
-                `;
-                albumsGrid.appendChild(albumCard);
-            });
-        }
-
-        // Render statistics
-        function renderStats() {
-            const statsContent = document.getElementById('statsContent');
-            
-            // Calculate stats
-            const totalMemories = memories.length;
-            const memoriesThisMonth = memories.filter(m => {
-                const memoryDate = new Date(m.timestamp);
-                const now = new Date();
-                return memoryDate.getMonth() === now.getMonth() && 
-                       memoryDate.getFullYear() === now.getFullYear();
-            }).length;
-            
-            const mostActiveFriend = getMostActiveFriend();
-            const topReaction = getTopReaction();
-            
-            statsContent.innerHTML = `
-                <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 30px;">
-                    <div class="stat-card">
-                        <div class="stat-value">${totalMemories}</div>
-                        <div class="stat-label">Total Memories</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${memoriesThisMonth}</div>
-                        <div class="stat-label">This Month</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${mostActiveFriend.name}</div>
-                        <div class="stat-label">Most Active</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${topReaction.emoji} ${topReaction.count}</div>
-                        <div class="stat-label">Top Reaction</div>
-                    </div>
-                </div>
-                
-                <div class="sidebar-section">
-                    <h3>Memories by Friend</h3>
-                    <div id="friendStats">
-                        ${renderFriendStats()}
-                    </div>
-                </div>
-                
-                <div class="sidebar-section">
-                    <h3>Memories by Month</h3>
-                    <div id="monthlyStats">
-                        ${renderMonthlyStats()}
-                    </div>
-                </div>
-            `;
-        }
-
-        // Render on this day memories
-        function renderOnThisDay() {
-            const onThisDayContent = document.getElementById('onThisDayContent');
-            const today = new Date();
-            const todayMonth = today.getMonth();
-            const todayDate = today.getDate();
-            
-            const onThisDayMemories = memories.filter(memory => {
-                const memoryDate = new Date(memory.timestamp);
-                return memoryDate.getMonth() === todayMonth && memoryDate.getDate() === todayDate;
-            });
-            
-            if (onThisDayMemories.length === 0) {
-                onThisDayContent.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">📅</div>
-                        <h3>No memories on this day</h3>
-                        <p>Check back tomorrow or add some new memories!</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            onThisDayContent.innerHTML = `
-                <h3>Memories from ${todayDate} ${getMonthName(todayMonth)}</h3>
-                <div class="memories-grid">
-                    ${onThisDayMemories.map(memory => `
-                        <div class="memory-card">
-                            <img src="${memory.image}" alt="Memory" class="memory-image">
-                            <div class="memory-content">
-                                <div class="memory-meta">
-                                    <span>${new Date(memory.timestamp).getFullYear()}</span>
-                                    <span>${memory.author}</span>
-                                </div>
-                                <div class="memory-text">${memory.text}</div>
-                                <div class="memory-actions">
-                                    <button class="btn btn-primary" onclick="viewMemory(${memory.id})">View Memory</button>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-
-        // Initialize map
-        function initMap() {
-            if (map) {
-                map.remove();
-            }
-            
-            map = L.map('memoryMap').setView([19.0760, 72.8777], 10); // Mumbai coordinates
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-            
-            // Add markers for memories with locations
-            memories.forEach(memory => {
-                if (memory.location && memory.lat && memory.lng) {
-                    L.marker([memory.lat, memory.lng])
-                        .addTo(map)
-                        .bindPopup(`
-                            <div>
-                                <img src="${memory.image}" style="width: 100px; height: 100px; object-fit: cover;">
-                                <p><strong>${memory.author}</strong></p>
-                                <p>${memory.text}</p>
-                                <p><small>${formatDate(memory.timestamp)}</small></p>
-                            </div>
-                        `);
-                }
-            });
-        }
-
-        // Show memory modal
-        function showMemoryModal() {
-            // Reset form
-            document.getElementById('memoryImage').value = '';
-            document.getElementById('memoryText').value = '';
-            document.getElementById('memoryLocation').value = '';
-            document.getElementById('memoryAuthor').value = 'You';
-            document.getElementById('memoryReminder').value = '';
-            document.getElementById('memoryAlbum').value = '';
-            document.getElementById('imagePreview').innerHTML = '<span>No image selected</span>';
-            
-            // Render friend tags
-            renderFriendTags();
-            
-            // Render album options
-            renderAlbumOptions();
-            
-            // Show modal
-            document.getElementById('memoryModal').style.display = 'flex';
-        }
-
-        // Close memory modal
-        function closeMemoryModal() {
-            document.getElementById('memoryModal').style.display = 'none';
-        }
-
-        // Show album modal
-        function showAlbumModal() {
-            // Reset form
-            document.getElementById('albumName').value = '';
-            document.getElementById('albumDescription').value = '';
-            document.getElementById('albumCover').value = '';
-            document.getElementById('albumCoverPreview').innerHTML = '<span>No image selected</span>';
-            
-            // Show modal
-            document.getElementById('albumModal').style.display = 'flex';
-        }
-
-        // Close album modal
-        function closeAlbumModal() {
-            document.getElementById('albumModal').style.display = 'none';
-        }
-
-        // Preview image before upload
-        function previewImage(event, previewElementId) {
-            const file = event.target.files[0];
-            const preview = document.getElementById(previewElementId);
-            
-            if (file) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-                }
-                
-                reader.readAsDataURL(file);
-            } else {
-                preview.innerHTML = '<span>No image selected</span>';
-            }
-        }
-
-        // Render friend tags for memory modal
-        function renderFriendTags() {
-            const friendsTags = document.getElementById('friendsTags');
-            friendsTags.innerHTML = '';
-            
-            friends.forEach(friend => {
-                if (friend.name === 'You') return; // Skip yourself
-                
-                const friendTag = document.createElement('div');
-                friendTag.className = 'friend-tag';
-                friendTag.textContent = friend.name;
-                friendTag.addEventListener('click', function() {
-                    this.classList.toggle('selected');
-                });
-                friendsTags.appendChild(friendTag);
-            });
-        }
-
-        // Render album options for memory modal
-        function renderAlbumOptions() {
-            const memoryAlbum = document.getElementById('memoryAlbum');
-            
-            // Clear existing options except the first one
-            while (memoryAlbum.children.length > 1) {
-                memoryAlbum.removeChild(memoryAlbum.lastChild);
-            }
-            
-            // Add album options
-            albums.forEach(album => {
-                const option = document.createElement('option');
-                option.value = album.id;
-                option.textContent = album.name;
-                memoryAlbum.appendChild(option);
-            });
-        }
-
-        // Save a new memory
-        function saveMemory() {
-            const imageFile = document.getElementById('memoryImage').files[0];
-            const text = document.getElementById('memoryText').value.trim();
-            const location = document.getElementById('memoryLocation').value.trim();
-            const author = document.getElementById('memoryAuthor').value;
-            const reminder = document.getElementById('memoryReminder').value;
-            const albumId = document.getElementById('memoryAlbum').value;
-            
-            if (!imageFile) {
-                alert('Please upload a photo!');
-                return;
-            }
-            
-            if (!text) {
-                alert('Please describe your memory!');
-                return;
-            }
-            
+        
+        let cover = null;
+        if (coverFile) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                const memory = {
-                    id: Date.now(),
-                    image: e.target.result,
-                    text: text,
-                    location: location,
-                    author: author,
-                    timestamp: new Date().toISOString(),
-                    reactions: { '❤️': 0, '😂': 0, '🔥': 0 },
-                    comments: [],
-                    taggedFriends: getSelectedFriends(),
-                    reminder: reminder || null,
-                    albumId: albumId || null
-                };
-                
-                // If location is provided, try to geocode it (simplified for demo)
-                if (location) {
-                    // In a real app, you would use a geocoding service here
-                    // For demo, we'll just set some random coordinates near Mumbai
-                    memory.lat = 19.0760 + (Math.random() - 0.5) * 0.1;
-                    memory.lng = 72.8777 + (Math.random() - 0.5) * 0.1;
-                }
-                
-                memories.unshift(memory);
-                localStorage.setItem('memories', JSON.stringify(memories));
-                
-                // If album is selected, add memory to album
-                if (albumId) {
-                    const album = albums.find(a => a.id == albumId);
-                    if (album) {
-                        album.memories.push(memory.id);
-                        localStorage.setItem('albums', JSON.stringify(albums));
-                    }
-                }
-                
-                // Set reminder if provided
-                if (reminder) {
-                    setMemoryReminder(memory.id, reminder);
-                }
-                
-                closeMemoryModal();
-                renderMemories();
-                
-                // If on map view, update map
-                if (map) {
-                    initMap();
-                }
-                
-                alert('Memory saved successfully!');
-            };
-            
-            reader.readAsDataURL(imageFile);
-        }
-
-        // Save a new album
-        function saveAlbum() {
-            const name = document.getElementById('albumName').value.trim();
-            const description = document.getElementById('albumDescription').value.trim();
-            const coverFile = document.getElementById('albumCover').files[0];
-            
-            if (!name) {
-                alert('Please enter an album name!');
-                return;
-            }
-            
-            let cover = null;
-            if (coverFile) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    cover = e.target.result;
-                    completeAlbumSave(name, description, cover);
-                };
-                reader.readAsDataURL(coverFile);
-            } else {
+                cover = e.target.result;
                 completeAlbumSave(name, description, cover);
-            }
-        }
-
-        function completeAlbumSave(name, description, cover) {
-            const album = {
-                id: Date.now(),
-                name: name,
-                description: description,
-                cover: cover,
-                memories: [],
-                created: new Date().toISOString()
             };
-            
-            albums.push(album);
-            localStorage.setItem('albums', JSON.stringify(albums));
-            
-            closeAlbumModal();
-            renderAlbums();
-            renderAlbumOptions();
-            
-            alert('Album created successfully!');
+            reader.readAsDataURL(coverFile);
+        } else {
+            completeAlbumSave(name, description, cover);
         }
+    }
 
-        // Get selected friends from tags
-        function getSelectedFriends() {
-            const selectedTags = document.querySelectorAll('.friend-tag.selected');
-            return Array.from(selectedTags).map(tag => tag.textContent);
-        }
+    function completeAlbumSave(name, description, cover) {
+        const album = {
+            id: Date.now(),
+            name: name,
+            description: description,
+            cover: cover,
+            memories: [],
+            created: new Date().toISOString()
+        };
+        
+        albums.push(album);
+        localStorage.setItem('albums', JSON.stringify(albums));
+        
+        closeAlbumModal();
+        renderAlbums();
+        renderAlbumOptions();
+        
+        alert('Album created successfully!');
+    }
 
-        // View a memory in detail
-        function viewMemory(memoryId) {
-            const memory = memories.find(m => m.id === memoryId);
-            if (!memory) return;
-            
-            currentViewingMemory = memoryId;
-            
-            document.getElementById('viewMemoryTitle').textContent = 'Memory';
-            document.getElementById('viewMemoryImage').src = memory.image;
-            document.getElementById('viewMemoryDate').textContent = formatDate(memory.timestamp);
-            document.getElementById('viewMemoryAuthor').textContent = `by ${memory.author}`;
-            document.getElementById('viewMemoryText').textContent = memory.text;
-            
-            // Render reactions
-            const reactionsContainer = document.getElementById('viewMemoryReactions');
-            reactionsContainer.innerHTML = '';
-            
-            Object.entries(memory.reactions).forEach(([emoji, count]) => {
-                if (count > 0) {
-                    const reactionBtn = document.createElement('button');
-                    reactionBtn.className = 'reaction-btn';
-                    reactionBtn.textContent = `${emoji} ${count}`;
-                    reactionBtn.onclick = () => reactToMemory(memoryId, emoji);
-                    reactionsContainer.appendChild(reactionBtn);
-                }
-            });
-            
-            // Add reaction buttons
-            ['❤️', '😂', '🔥'].forEach(emoji => {
-                if (!memory.reactions[emoji] || memory.reactions[emoji] === 0) {
-                    const reactionBtn = document.createElement('button');
-                    reactionBtn.className = 'reaction-btn';
-                    reactionBtn.textContent = emoji;
-                    reactionBtn.onclick = () => reactToMemory(memoryId, emoji);
-                    reactionsContainer.appendChild(reactionBtn);
-                }
-            });
-            
-            // Render comments
-            renderComments(memory);
-            
-            // Show modal
-            document.getElementById('viewMemoryModal').style.display = 'flex';
-        }
+    // Get selected friends from tags
+    function getSelectedFriends() {
+        const selectedTags = document.querySelectorAll('.friend-tag.selected');
+        return Array.from(selectedTags).map(tag => tag.textContent);
+    }
 
-        // Close view memory modal
-        function closeViewMemoryModal() {
-            document.getElementById('viewMemoryModal').style.display = 'none';
-            currentViewingMemory = null;
-        }
+    // View a memory in detail
+    function viewMemory(memoryId) {
+        const memory = memories.find(m => m.id === memoryId);
+        if (!memory) return;
+        
+        currentViewingMemory = memoryId;
+        
+        document.getElementById('viewMemoryTitle').textContent = 'Memory';
+        document.getElementById('viewMemoryImage').src = memory.image;
+        document.getElementById('viewMemoryDate').textContent = formatDate(memory.timestamp);
+        document.getElementById('viewMemoryAuthor').textContent = `by ${memory.author}`;
+        document.getElementById('viewMemoryText').textContent = memory.text;
+        
+        // Render reactions
+        const reactionsContainer = document.getElementById('viewMemoryReactions');
+        reactionsContainer.innerHTML = '';
+        
+        Object.entries(memory.reactions).forEach(([emoji, count]) => {
+            if (count > 0) {
+                const reactionBtn = document.createElement('button');
+                reactionBtn.className = 'reaction-btn';
+                reactionBtn.textContent = `${emoji} ${count}`;
+                reactionBtn.onclick = () => reactToMemory(memoryId, emoji);
+                reactionsContainer.appendChild(reactionBtn);
+            }
+        });
+        
+        // Add reaction buttons
+        ['❤️', '😂', '🔥'].forEach(emoji => {
+            if (!memory.reactions[emoji] || memory.reactions[emoji] === 0) {
+                const reactionBtn = document.createElement('button');
+                reactionBtn.className = 'reaction-btn';
+                reactionBtn.textContent = emoji;
+                reactionBtn.onclick = () => reactToMemory(memoryId, emoji);
+                reactionsContainer.appendChild(reactionBtn);
+            }
+        });
+        
+        // Render comments
+        renderComments(memory);
+        
+        // Show modal
+        document.getElementById('viewMemoryModal').style.display = 'flex';
+    }
 
-        // Render comments for a memory
-        function renderComments(memory) {
-            const commentsSection = document.getElementById('commentsSection');
-            
-            commentsSection.innerHTML = `
-                <h3>Comments (${memory.comments.length})</h3>
-                ${memory.comments.map(comment => `
-                    <div class="comment">
-                        <div class="comment-header">
-                            <span class="comment-author">${comment.author}</span>
-                            <span class="comment-date">${formatDate(comment.timestamp)}</span>
-                        </div>
-                        <div class="comment-text">${comment.text}</div>
+    // Close view memory modal
+    function closeViewMemoryModal() {
+        document.getElementById('viewMemoryModal').style.display = 'none';
+        currentViewingMemory = null;
+    }
+
+    // Render comments for a memory
+    function renderComments(memory) {
+        const commentsSection = document.getElementById('commentsSection');
+        
+        commentsSection.innerHTML = `
+            <h3>Comments (${memory.comments.length})</h3>
+            ${memory.comments.map(comment => `
+                <div class="comment">
+                    <div class="comment-header">
+                        <span class="comment-author">${comment.author}</span>
+                        <span class="comment-date">${formatDate(comment.timestamp)}</span>
                     </div>
-                `).join('')}
-                <div class="add-comment">
-                    <input type="text" class="comment-input" id="newComment" placeholder="Add a comment...">
-                    <button class="btn btn-primary" onclick="addComment(${memory.id})">Post</button>
+                    <div class="comment-text">${comment.text}</div>
                 </div>
-            `;
-        }
+            `).join('')}
+            <div class="add-comment">
+                <input type="text" class="comment-input" id="newComment" placeholder="Add a comment...">
+                <button class="btn btn-primary" onclick="addComment(${memory.id})">Post</button>
+            </div>
+        `;
+    }
 
-        // Add a comment to a memory
-        function addComment(memoryId) {
-            const commentInput = document.getElementById('newComment');
-            const text = commentInput.value.trim();
-            
-            if (!text) return;
-            
-            const memory = memories.find(m => m.id === memoryId);
-            if (!memory) return;
-            
-            memory.comments.push({
-                author: 'You', // In a real app, this would be the current user
+    // Add a comment to a memory
+    function addComment(memoryId) {
+        const commentInput = document.getElementById('newComment');
+        const text = commentInput.value.trim();
+        
+        if (!text) return;
+        
+        const memory = memories.find(m => m.id === memoryId);
+        if (!memory) return;
+        
+        memory.comments.push({
+            author: 'Shifa', // In a real app, this would be the current user
+            text: text,
+            timestamp: new Date().toISOString()
+        });
+        
+        localStorage.setItem('memories', JSON.stringify(memories));
+        renderComments(memory);
+        commentInput.value = '';
+    }
+
+    // React to a memory
+    function reactToMemory(memoryId, emoji) {
+        const memory = memories.find(m => m.id === memoryId);
+        if (!memory) return;
+        
+        if (!memory.reactions[emoji]) {
+            memory.reactions[emoji] = 0;
+        }
+        
+        memory.reactions[emoji]++;
+        localStorage.setItem('memories', JSON.stringify(memories));
+        
+        // If we're viewing the memory, update the view
+        if (currentViewingMemory === memoryId) {
+            viewMemory(memoryId);
+        } else {
+            renderMemories();
+        }
+    }
+
+    // Share a memory
+    function shareMemory(memoryId) {
+        const memory = memories.find(m => m.id === memoryId);
+        if (!memory) return;
+        
+        const text = `Check out this memory from Memory Lane: "${memory.text}"`;
+        const url = window.location.href;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'Memory Lane',
                 text: text,
-                timestamp: new Date().toISOString()
+                url: url
             });
-            
-            localStorage.setItem('memories', JSON.stringify(memories));
-            renderComments(memory);
-            commentInput.value = '';
+        } else {
+            // Fallback for browsers that don't support Web Share API
+            navigator.clipboard.writeText(text + ' ' + url).then(() => {
+                alert('Memory link copied to clipboard!');
+            });
         }
+    }
 
-        // React to a memory
-        function reactToMemory(memoryId, emoji) {
-            const memory = memories.find(m => m.id === memoryId);
-            if (!memory) return;
-            
-            if (!memory.reactions[emoji]) {
-                memory.reactions[emoji] = 0;
-            }
-            
-            memory.reactions[emoji]++;
-            localStorage.setItem('memories', JSON.stringify(memories));
-            
-            // If we're viewing the memory, update the view
-            if (currentViewingMemory === memoryId) {
-                viewMemory(memoryId);
-            } else {
-                renderMemories();
-            }
+    // Download a memory
+    function downloadMemory(memoryId) {
+        const memory = memories.find(m => m.id === memoryId);
+        if (!memory) return;
+        
+        const link = document.createElement('a');
+        link.href = memory.image;
+        link.download = `memory-${memoryId}.jpg`;
+        link.click();
+    }
+
+    // Set a reminder for a memory
+    function setReminder(memoryId) {
+        const date = prompt('Enter reminder date (YYYY-MM-DD):');
+        if (!date) return;
+        
+        setMemoryReminder(memoryId, date);
+        alert('Reminder set!');
+    }
+
+    // Set memory reminder (simplified for demo)
+    function setMemoryReminder(memoryId, date) {
+        // In a real app, you would use the Notifications API or a service worker
+        // For this demo, we'll just store it and show an alert
+        const memory = memories.find(m => m.id === memoryId);
+        if (!memory) return;
+        
+        memory.reminder = date;
+        localStorage.setItem('memories', JSON.stringify(memories));
+        
+        // Schedule a simple alert (in a real app, you'd use more robust scheduling)
+        const reminderTime = new Date(date).getTime() - Date.now();
+        if (reminderTime > 0) {
+            setTimeout(() => {
+                alert(`Reminder: ${memory.text}`);
+            }, Math.min(reminderTime, 2147483647)); // Max setTimeout value
         }
+    }
 
-        // Share a memory
-        function shareMemory(memoryId) {
-            const memory = memories.find(m => m.id === memoryId);
-            if (!memory) return;
-            
-            const text = `Check out this memory from Memory Lane: "${memory.text}"`;
-            const url = window.location.href;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Memory Lane',
-                    text: text,
-                    url: url
-                });
-            } else {
-                // Fallback for browsers that don't support Web Share API
-                navigator.clipboard.writeText(text + ' ' + url).then(() => {
-                    alert('Memory link copied to clipboard!');
-                });
-            }
-        }
+    // View an album
+    function viewAlbum(albumId) {
+        const album = albums.find(a => a.id === albumId);
+        if (!album) return;
+        
+        const albumMemories = memories.filter(m => album.memories.includes(m.id));
+        
+        // For this demo, we'll just show an alert with the album info
+        // In a real app, you would create a proper album view
+        alert(`Album: ${album.name}\nMemories: ${albumMemories.length}\n\nClick OK to view these memories in the timeline.`);
+        
+        // Filter timeline to show only album memories
+        document.getElementById('searchInput').value = '';
+        document.getElementById('filterAuthor').value = '';
+        document.getElementById('filterDate').value = '';
+        
+        // We can't directly filter by album in the current implementation,
+        // so we'll just switch to the timeline view
+        showView('timeline');
+    }
 
-        // Download a memory
-        function downloadMemory(memoryId) {
-            const memory = memories.find(m => m.id === memoryId);
-            if (!memory) return;
-            
-            const link = document.createElement('a');
-            link.href = memory.image;
-            link.download = `memory-${memoryId}.jpg`;
-            link.click();
-        }
+    // Export memories
+    function exportMemories() {
+        const dataStr = JSON.stringify(memories, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = 'memory-lane-export.json';
+        link.click();
+    }
 
-        // Set a reminder for a memory
-        function setReminder(memoryId) {
-            const date = prompt('Enter reminder date (YYYY-MM-DD):');
-            if (!date) return;
-            
-            setMemoryReminder(memoryId, date);
-            alert('Reminder set!');
-        }
+    // Update quick stats in sidebar
+    function updateQuickStats() {
+        const quickStats = document.getElementById('quickStats');
+        const totalMemories = memories.length;
+        
+        const memoriesThisWeek = memories.filter(m => {
+            const memoryDate = new Date(m.timestamp);
+            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+            return memoryDate > weekAgo;
+        }).length;
+        
+        const memoriesWithReactions = memories.filter(m => 
+            Object.values(m.reactions).some(count => count > 0)
+        ).length;
+        
+        quickStats.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-value">${totalMemories}</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${memoriesThisWeek}</div>
+                <div class="stat-label">This Week</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${memoriesWithReactions}</div>
+                <div class="stat-label">With Reactions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${friends.length}</div>
+                <div class="stat-label">Friends</div>
+            </div>
+        `;
+        
+        // Update upcoming birthdays
+        updateUpcomingBirthdays();
+    }
 
-        // Set memory reminder (simplified for demo)
-        function setMemoryReminder(memoryId, date) {
-            // In a real app, you would use the Notifications API or a service worker
-            // For this demo, we'll just store it and show an alert
-            const memory = memories.find(m => m.id === memoryId);
-            if (!memory) return;
+    // Update upcoming birthdays in sidebar
+    function updateUpcomingBirthdays() {
+        const upcomingBirthdays = document.getElementById('upcomingBirthdays');
+        const today = new Date();
+        const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+        
+        const upcoming = [];
+        
+        Object.entries(friendBirthdays).forEach(([friendId, birthday]) => {
+            const birthdayDate = new Date(birthday);
+            birthdayDate.setFullYear(today.getFullYear()); // Set to current year
             
-            memory.reminder = date;
-            localStorage.setItem('memories', JSON.stringify(memories));
-            
-            // Schedule a simple alert (in a real app, you'd use more robust scheduling)
-            const reminderTime = new Date(date).getTime() - Date.now();
-            if (reminderTime > 0) {
-                setTimeout(() => {
-                    alert(`Reminder: ${memory.text}`);
-                }, Math.min(reminderTime, 2147483647)); // Max setTimeout value
-            }
-        }
-
-        // View an album
-        function viewAlbum(albumId) {
-            const album = albums.find(a => a.id === albumId);
-            if (!album) return;
-            
-            const albumMemories = memories.filter(m => album.memories.includes(m.id));
-            
-            // For this demo, we'll just show an alert with the album info
-            // In a real app, you would create a proper album view
-            alert(`Album: ${album.name}\nMemories: ${albumMemories.length}\n\nClick OK to view these memories in the timeline.`);
-            
-            // Filter timeline to show only album memories
-            document.getElementById('searchInput').value = '';
-            document.getElementById('filterAuthor').value = '';
-            document.getElementById('filterDate').value = '';
-            
-            // We can't directly filter by album in the current implementation,
-            // so we'll just switch to the timeline view
-            showView('timeline');
-        }
-
-        // Export memories
-        function exportMemories() {
-            const dataStr = JSON.stringify(memories, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(dataBlob);
-            link.download = 'memory-lane-export.json';
-            link.click();
-        }
-
-        // Update quick stats in sidebar
-        function updateQuickStats() {
-            const quickStats = document.getElementById('quickStats');
-            const totalMemories = memories.length;
-            
-            const memoriesThisWeek = memories.filter(m => {
-                const memoryDate = new Date(m.timestamp);
-                const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-                return memoryDate > weekAgo;
-            }).length;
-            
-            const memoriesWithReactions = memories.filter(m => 
-                Object.values(m.reactions).some(count => count > 0)
-            ).length;
-            
-            quickStats.innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-value">${totalMemories}</div>
-                    <div class="stat-label">Total</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${memoriesThisWeek}</div>
-                    <div class="stat-label">This Week</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${memoriesWithReactions}</div>
-                    <div class="stat-label">With Reactions</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value">${friends.length}</div>
-                    <div class="stat-label">Friends</div>
-                </div>
-            `;
-            
-            // Update upcoming birthdays
-            updateUpcomingBirthdays();
-        }
-
-        // Update upcoming birthdays in sidebar
-        function updateUpcomingBirthdays() {
-            const upcomingBirthdays = document.getElementById('upcomingBirthdays');
-            const today = new Date();
-            const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
-            
-            const upcoming = [];
-            
-            Object.entries(friendBirthdays).forEach(([friendId, birthday]) => {
-                const birthdayDate = new Date(birthday);
-                birthdayDate.setFullYear(today.getFullYear()); // Set to current year
-                
-                if (birthdayDate >= today && birthdayDate <= nextMonth) {
-                    const friend = friends.find(f => f.id == friendId);
-                    if (friend) {
-                        upcoming.push({
-                            friend: friend,
-                            date: birthdayDate
-                        });
-                    }
+            if (birthdayDate >= today && birthdayDate <= nextMonth) {
+                const friend = friends.find(f => f.id == friendId);
+                if (friend) {
+                    upcoming.push({
+                        friend: friend,
+                        date: birthdayDate
+                    });
                 }
-            });
-            
-            // Sort by date
-            upcoming.sort((a, b) => a.date - b.date);
-            
-            if (upcoming.length === 0) {
-                upcomingBirthdays.innerHTML = '<p>No upcoming birthdays</p>';
-                return;
             }
-            
-            upcomingBirthdays.innerHTML = upcoming.map(item => `
-                <div class="friend-item">
-                    <div class="friend-avatar" style="background-color: ${item.friend.color}">${item.friend.avatar}</div>
-                    <div>
-                        <div>${item.friend.name}</div>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">
-                            ${formatDate(item.date.toISOString())}
-                        </div>
+        });
+        
+        // Sort by date
+        upcoming.sort((a, b) => a.date - b.date);
+        
+        if (upcoming.length === 0) {
+            upcomingBirthdays.innerHTML = '<p>No upcoming birthdays</p>';
+            return;
+        }
+        
+        upcomingBirthdays.innerHTML = upcoming.map(item => `
+            <div class="friend-item">
+                <div class="friend-avatar" style="background-color: ${item.friend.color}">${item.friend.avatar}</div>
+                <div>
+                    <div>${item.friend.name}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-light);">
+                        ${formatDate(item.date.toISOString())}
                     </div>
                 </div>
-            `).join('');
-        }
+            </div>
+        `).join('');
+    }
 
-        // Get most active friend
-        function getMostActiveFriend() {
-            const friendCounts = {};
-            
-            memories.forEach(memory => {
-                if (!friendCounts[memory.author]) {
-                    friendCounts[memory.author] = 0;
+    // Get most active friend
+    function getMostActiveFriend() {
+        const friendCounts = {};
+        
+        memories.forEach(memory => {
+            if (!friendCounts[memory.author]) {
+                friendCounts[memory.author] = 0;
+            }
+            friendCounts[memory.author]++;
+        });
+        
+        let mostActive = { name: 'No one', count: 0 };
+        Object.entries(friendCounts).forEach(([name, count]) => {
+            if (count > mostActive.count) {
+                mostActive = { name, count };
+            }
+        });
+        
+        return mostActive;
+    }
+
+    // Get top reaction
+    function getTopReaction() {
+        const reactionCounts = { '❤️': 0, '😂': 0, '🔥': 0 };
+        
+        memories.forEach(memory => {
+            Object.entries(memory.reactions).forEach(([emoji, count]) => {
+                if (reactionCounts[emoji] !== undefined) {
+                    reactionCounts[emoji] += count;
                 }
+            });
+        });
+        
+        let topReaction = { emoji: '❤️', count: 0 };
+        Object.entries(reactionCounts).forEach(([emoji, count]) => {
+            if (count > topReaction.count) {
+                topReaction = { emoji, count };
+            }
+        });
+        
+        return topReaction;
+    }
+
+    // Render friend stats
+    function renderFriendStats() {
+        const friendCounts = {};
+        
+        friends.forEach(friend => {
+            friendCounts[friend.name] = 0;
+        });
+        
+        memories.forEach(memory => {
+            if (friendCounts[memory.author] !== undefined) {
                 friendCounts[memory.author]++;
-            });
-            
-            let mostActive = { name: 'No one', count: 0 };
-            Object.entries(friendCounts).forEach(([name, count]) => {
-                if (count > mostActive.count) {
-                    mostActive = { name, count };
-                }
-            });
-            
-            return mostActive;
-        }
-
-        // Get top reaction
-        function getTopReaction() {
-            const reactionCounts = { '❤️': 0, '😂': 0, '🔥': 0 };
-            
-            memories.forEach(memory => {
-                Object.entries(memory.reactions).forEach(([emoji, count]) => {
-                    if (reactionCounts[emoji] !== undefined) {
-                        reactionCounts[emoji] += count;
-                    }
-                });
-            });
-            
-            let topReaction = { emoji: '❤️', count: 0 };
-            Object.entries(reactionCounts).forEach(([emoji, count]) => {
-                if (count > topReaction.count) {
-                    topReaction = { emoji, count };
-                }
-            });
-            
-            return topReaction;
-        }
-
-        // Render friend stats
-        function renderFriendStats() {
-            const friendCounts = {};
-            
-            friends.forEach(friend => {
-                friendCounts[friend.name] = 0;
-            });
-            
-            memories.forEach(memory => {
-                if (friendCounts[memory.author] !== undefined) {
-                    friendCounts[memory.author]++;
-                }
-            });
-            
-            return Object.entries(friendCounts).map(([name, count]) => `
-                <div class="friend-item">
-                    <div class="friend-avatar" style="background-color: ${friends.find(f => f.name === name).color}">
-                        ${friends.find(f => f.name === name).avatar}
-                    </div>
-                    <div style="flex: 1;">
-                        <div>${name}</div>
-                        <div style="font-size: 0.8rem; color: var(--text-light);">
-                            ${count} memory${count !== 1 ? 'ies' : 'y'}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Render monthly stats
-        function renderMonthlyStats() {
-            const monthlyCounts = {};
-            
-            memories.forEach(memory => {
-                const date = new Date(memory.timestamp);
-                const monthYear = `${date.getFullYear()}-${date.getMonth()}`;
-                
-                if (!monthlyCounts[monthYear]) {
-                    monthlyCounts[monthYear] = 0;
-                }
-                monthlyCounts[monthYear]++;
-            });
-            
-            // Get last 6 months
-            const last6Months = [];
-            const today = new Date();
-            
-            for (let i = 0; i < 6; i++) {
-                const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
-                const monthYear = `${date.getFullYear()}-${date.getMonth()}`;
-                last6Months.unshift({
-                    label: `${getMonthName(date.getMonth())} ${date.getFullYear()}`,
-                    count: monthlyCounts[monthYear] || 0
-                });
             }
-            
-            return last6Months.map(month => `
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                    <span>${month.label}</span>
-                    <span>${month.count}</span>
+        });
+        
+        return Object.entries(friendCounts).map(([name, count]) => `
+            <div class="friend-item">
+                <div class="friend-avatar" style="background-color: ${friends.find(f => f.name === name).color}">
+                    ${friends.find(f => f.name === name).avatar}
                 </div>
-            `).join('');
-        }
+                <div style="flex: 1;">
+                    <div>${name}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-light);">
+                        ${count} memory${count !== 1 ? 'ies' : 'y'}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
 
-        // Utility function to format date
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'short', 
-                day: 'numeric'
+    // Render monthly stats
+    function renderMonthlyStats() {
+        const monthlyCounts = {};
+        
+        memories.forEach(memory => {
+            const date = new Date(memory.timestamp);
+            const monthYear = `${date.getFullYear()}-${date.getMonth()}`;
+            
+            if (!monthlyCounts[monthYear]) {
+                monthlyCounts[monthYear] = 0;
+            }
+            monthlyCounts[monthYear]++;
+        });
+        
+        // Get last 6 months
+        const last6Months = [];
+        const today = new Date();
+        
+        for (let i = 0; i < 6; i++) {
+            const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+            const monthYear = `${date.getFullYear()}-${date.getMonth()}`;
+            last6Months.unshift({
+                label: `${getMonthName(date.getMonth())} ${date.getFullYear()}`,
+                count: monthlyCounts[monthYear] || 0
             });
         }
+        
+        return last6Months.map(month => `
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span>${month.label}</span>
+                <span>${month.count}</span>
+            </div>
+        `).join('');
+    }
 
-        // Utility function to get month name
-        function getMonthName(monthIndex) {
-            const months = [
-                'January', 'February', 'March', 'April', 'May', 'June',
-                'July', 'August', 'September', 'October', 'November', 'December'
-            ];
-            return months[monthIndex];
-        }
+    // Utility function to format date
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric'
+        });
+    }
 
-        // Add sample data for demo
-      
+    // Utility function to get month name
+    function getMonthName(monthIndex) {
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        return months[monthIndex];
+    }
+
+    // Add sample data for demo
+    function addSampleData() {
+        const sampleMemories = [
+            {
+                id: 1,
+                image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+                text: 'Amazing beach day with friends! The weather was perfect.',
+                location: 'Juhu Beach, Mumbai',
+                author: 'Shifa',
+                timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+                reactions: { '❤️': 3, '😂': 1, '🔥': 2 },
+                comments: [
+                    { author: 'Ayaan', text: 'Best day ever!', timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString() },
+                    { author: 'Ritika', text: 'We should do this again soon!', timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() }
+                ],
+                taggedFriends: ['Ayaan', 'Ritika', 'Vidhi'],
+                lat: 19.0992,
+                lng: 72.8264
+            },
+            {
+                id: 2,
+                image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+                text: 'Delicious food at the new restaurant downtown!',
+                location: 'Bandra, Mumbai',
+                author: 'Ayaan',
+                timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+                reactions: { '❤️': 5, '😂': 0, '🔥': 1 },
+                comments: [
+                    { author: 'Shifa', text: 'The pasta was amazing!', timestamp: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString() }
+                ],
+                taggedFriends: ['Shifa', 'Saksham'],
+                lat: 19.0544,
+                lng: 72.8406
+            }
+        ];
+        
+        memories.push(...sampleMemories);
+        localStorage.setItem('memories', JSON.stringify(memories));
+        
+        // Add a sample album
+        const sampleAlbum = {
+            id: 1,
+            name: 'Beach Days',
+            description: 'All our fun times at the beach',
+            cover: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
+            memories: [1],
+            created: new Date().toISOString()
+        };
+        
+        albums.push(sampleAlbum);
+        localStorage.setItem('albums', JSON.stringify(albums));
+    }
+
+    // Initialize the app when the page loads
+    window.addEventListener('DOMContentLoaded', init);
+</script>
            
-            ];
+      
             
-            memories.push(...sampleMemories);
-            localStorage.setItem('memories', JSON.stringify(memories));
-            
-            // Add a sample album
-          
-            
-            albums.push(sampleAlbum);
-            localStorage.setItem('albums', JSON.stringify(albums));
-        }
-
-        // Initialize the app when the page loads
-        window.addEventListener('DOMContentLoaded', init);
-    </script>
-</body>
-</html>
+       
