@@ -891,6 +891,9 @@
        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
     // Data initialization
+   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // Data initialization
     const friends = [
         { id: 1, name: 'Shifa', avatar: 'S', color: '#6366f1' },
         { id: 2, name: 'Ayaan', avatar: 'A', color: '#ef4444' },
@@ -986,10 +989,7 @@
             previewImage(e, 'albumCoverPreview');
         });
         
-        // Add some sample data if empty
-        if (memories.length === 0) {
-            addSampleData();
-        }
+        // No sample data - start with empty memories
     }
 
     // Show a specific view
@@ -1940,62 +1940,15 @@
         return months[monthIndex];
     }
 
-    // Add sample data for demo
-    function addSampleData() {
-        const sampleMemories = [
-            {
-                id: 1,
-                image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-                text: 'Amazing beach day with friends! The weather was perfect.',
-                location: 'Juhu Beach, Mumbai',
-                author: 'Shifa',
-                timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-                reactions: { '❤️': 3, '😂': 1, '🔥': 2 },
-                comments: [
-                    { author: 'Ayaan', text: 'Best day ever!', timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString() },
-                    { author: 'Ritika', text: 'We should do this again soon!', timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() }
-                ],
-                taggedFriends: ['Ayaan', 'Ritika', 'Vidhi'],
-                lat: 19.0992,
-                lng: 72.8264
-            },
-            {
-                id: 2,
-                image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-                text: 'Delicious food at the new restaurant downtown!',
-                location: 'Bandra, Mumbai',
-                author: 'Ayaan',
-                timestamp: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
-                reactions: { '❤️': 5, '😂': 0, '🔥': 1 },
-                comments: [
-                    { author: 'Shifa', text: 'The pasta was amazing!', timestamp: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString() }
-                ],
-                taggedFriends: ['Shifa', 'Saksham'],
-                lat: 19.0544,
-                lng: 72.8406
-            }
-        ];
-        
-        memories.push(...sampleMemories);
-        localStorage.setItem('memories', JSON.stringify(memories));
-        
-        // Add a sample album
-        const sampleAlbum = {
-            id: 1,
-            name: 'Beach Days',
-            description: 'All our fun times at the beach',
-            cover: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80',
-            memories: [1],
-            created: new Date().toISOString()
-        };
-        
-        albums.push(sampleAlbum);
-        localStorage.setItem('albums', JSON.stringify(albums));
-    }
-
     // Initialize the app when the page loads
     window.addEventListener('DOMContentLoaded', init);
 </script>
+
+    
+      
+
+</body>
+</html>
            
       
             
