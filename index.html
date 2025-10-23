@@ -16,6 +16,33 @@
     overflow: hidden;
   }
   
+  /* Header */
+  .app-header {
+    background: #36393f;
+    padding: 15px 20px;
+    border-bottom: 1px solid #40444b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .logout-btn {
+    background: #f04747;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .logout-btn:hover {
+    background: #da373c;
+  }
+  
   /* Sidebar */
   .sidebar {
     width: 220px;
@@ -324,24 +351,36 @@
   </div>
 </div>
 
-<div class="sidebar" id="sidebar" style="display:none">
-  <h2>Friends</h2>
-  <!-- Friend buttons will go here -->
-</div>
+<div class="app" id="app" style="display:none; width:100%; flex-direction:column;">
+  <div class="app-header">
+    <h1>🕒 Memory Lane</h1>
+    <div class="header-actions">
+      <span>Welcome, <strong id="welcomeUser"></strong></span>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+  
+  <div style="display:flex; flex:1; overflow:hidden;">
+    <div class="sidebar" id="sidebar">
+      <h2>Friends</h2>
+      <!-- Friend buttons will go here -->
+    </div>
 
-<div class="main-content" style="display:none">
-  <div class="profile-header">
-    <h1 id="profileName">Profile</h1>
-    <textarea id="bioInput" class="bio-area" placeholder="Write your bio..." rows="3"></textarea>
-  </div>
-  <div class="upload-section" id="uploadSection">
-    <input type="file" id="imageUpload" accept="image/*">
-    <input type="text" id="captionInput" placeholder="What's on your mind?">
-    <input type="date" id="memoryDate">
-    <button id="uploadBtn" class="btn">Post Memory</button>
-  </div>
-  <div class="posts-grid" id="postsGrid">
-    <!-- Posts go here -->
+    <div class="main-content">
+      <div class="profile-header">
+        <h1 id="profileName">Profile</h1>
+        <textarea id="bioInput" class="bio-area" placeholder="Write your bio..." rows="3"></textarea>
+      </div>
+      <div class="upload-section" id="uploadSection">
+        <input type="file" id="imageUpload" accept="image/*">
+        <input type="text" id="captionInput" placeholder="What's on your mind?">
+        <input type="date" id="memoryDate">
+        <button id="uploadBtn" class="btn">Post Memory</button>
+      </div>
+      <div class="posts-grid" id="postsGrid">
+        <!-- Posts go here -->
+      </div>
+    </div>
   </div>
 </div>
 
@@ -365,21 +404,47 @@ let posts = [];
 
 // Load from localStorage
 function loadData() {
-  const savedPosts = localStorage.getItem('memoryLanePosts');
-  const savedUsers = localStorage.getItem('memoryLaneUsers');
-  const savedCurrentUser = localStorage.getItem('memoryLaneCurrentUser');
-  
-  if (savedPosts) posts = JSON.parse(savedPosts);
-  if (savedUsers) users = JSON.parse(savedUsers);
-  if (savedCurrentUser) currentUser = JSON.parse(savedCurrentUser);
+  try {
+    const savedPosts = localStorage.getItem('memoryLanePosts');
+    const savedUsers = localStorage.getItem('memoryLaneUsers');
+    const savedCurrentUser = localStorage.getItem('memoryLaneCurrentUser');
+    
+    if (savedPosts) posts = JSON.parse(savedPosts);
+    if (savedUsers) users = JSON.parse(savedUsers);
+    if (savedCurrentUser) currentUser = JSON.parse(savedCurrentUser);
+    
+    console.log('Loaded data:', { postsCount: posts.length, usersCount: users.length });
+  } catch (error) {
+    console.error('Error loading data:', error);
+    // Reset to default if corrupted
+    posts = [];
+    users = [
+      {name:'Shifa', birthday:'10-06-2008', bio:'', id:1},
+      {name:'Ritika', birthday:'06-07-2008', bio:'', id:2},
+      {name:'Vidhi', birthday:'12-11-2008', bio:'', id:3},
+      {name:'Saksham', birthday:'24-01-2009', bio:'', id:4},
+      {name:'Harshit', birthday:'23-01-2007', bio:'', id:5},
+      {name:'Sai', birthday:'04-03-2008', bio:'', id:6},
+      {name:'Juili', birthday:'25-05-2008', bio:'', id:7},
+      {name:'Kunal', birthday:'19-10-2008', bio:'', id:8},
+      {name:'Ayaan', birthday:'16-01-2008', bio:'', id:9},
+      {name:'Amrut', birthday:'20-09-2005', bio:'', id:10}
+    ];
+  }
 }
 
 // Save to localStorage
 function saveData() {
-  localStorage.setItem('memoryLanePosts', JSON.stringify(posts));
-  localStorage.setItem('memoryLaneUsers', JSON.stringify(users));
-  if (currentUser) {
-    localStorage.setItem('memoryLaneCurrentUser', JSON.stringify(currentUser));
+  try {
+    localStorage.setItem('memoryLanePosts', JSON.stringify(posts));
+    localStorage.setItem('memoryLaneUsers', JSON.stringify(users));
+    if (currentUser) {
+      localStorage.setItem('memoryLaneCurrentUser', JSON.stringify(currentUser));
+    }
+    console.log('Data saved successfully');
+  } catch (error) {
+    console.error('Error saving data:', error);
+    alert('Error saving data. The image might be too large.');
   }
 }
 
@@ -394,6 +459,8 @@ const imageUpload = document.getElementById('imageUpload');
 const captionInput = document.getElementById('captionInput');
 const memoryDate = document.getElementById('memoryDate');
 const uploadBtn = document.getElementById('uploadBtn');
+const app = document.getElementById('app');
+const welcomeUser = document.getElementById('welcomeUser');
 
 // Initialize
 loadData();
@@ -421,10 +488,24 @@ function login(){
   }
 }
 
+function logout() {
+  if (confirm('Are you sure you want to logout?')) {
+    currentUser = null;
+    localStorage.removeItem('memoryLaneCurrentUser');
+    app.style.display = 'none';
+    loginScreen.style.display = 'flex';
+    
+    // Reset login form
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    loginError.textContent = '';
+  }
+}
+
 function showApp() {
   loginScreen.style.display = 'none';
-  sidebar.style.display = 'flex';
-  document.querySelector('.main-content').style.display = 'flex';
+  app.style.display = 'flex';
+  welcomeUser.textContent = currentUser.name;
   renderSidebar();
   viewProfile(currentUser.name);
 }
@@ -587,11 +668,17 @@ bioInput.addEventListener('input', () => {
   }, 500);
 });
 
-// Upload post
+// Upload post with image compression
 uploadBtn.onclick = () => {
   const file = imageUpload.files[0];
   if (!file) {
     alert('Please select an image');
+    return;
+  }
+  
+  // Check file size (max 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Image too large! Please select an image smaller than 5MB.');
     return;
   }
   
@@ -605,25 +692,36 @@ uploadBtn.onclick = () => {
   
   const reader = new FileReader();
   reader.onload = function(e) {
-    const post = {
-      id: Date.now(),
-      user: currentUser.name,
-      image: e.target.result,
-      caption: caption,
-      date: date,
-      likes: 0,
-      comments: []
-    };
-    
-    posts.push(post);
-    saveData();
-    viewProfile(currentUser.name);
-    
-    // Reset form
-    imageUpload.value = '';
-    captionInput.value = '';
-    memoryDate.value = '';
+    try {
+      const post = {
+        id: Date.now(),
+        user: currentUser.name,
+        image: e.target.result,
+        caption: caption,
+        date: date,
+        likes: 0,
+        comments: []
+      };
+      
+      posts.push(post);
+      saveData();
+      viewProfile(currentUser.name);
+      
+      // Reset form
+      imageUpload.value = '';
+      captionInput.value = '';
+      memoryDate.value = new Date().toISOString().split('T')[0];
+      
+    } catch (error) {
+      console.error('Error creating post:', error);
+      alert('Error creating post. The image might be too large.');
+    }
   };
+  
+  reader.onerror = function() {
+    alert('Error reading the image file. Please try another image.');
+  };
+  
   reader.readAsDataURL(file);
 };
 
@@ -670,6 +768,17 @@ function openFullView(src, caption) {
     if (e.target === overlay) overlay.remove();
   };
   
+  // Close on ESC key
+  const escHandler = (e) => {
+    if (e.key === 'Escape') overlay.remove();
+  };
+  document.addEventListener('keydown', escHandler);
+  
+  // Cleanup event listener when overlay is removed
+  overlay.addEventListener('remove', () => {
+    document.removeEventListener('keydown', escHandler);
+  });
+  
   document.body.appendChild(overlay);
 }
 
@@ -685,6 +794,22 @@ document.addEventListener('keydown', (e) => {
     if (overlay) overlay.remove();
   }
 });
+
+// Clear all data (for testing)
+function clearAllData() {
+  if (confirm('Clear ALL data? This cannot be undone!')) {
+    localStorage.clear();
+    location.reload();
+  }
+}
+
+// Debug function to check storage
+function checkStorage() {
+  console.log('Posts:', posts);
+  console.log('Users:', users);
+  console.log('Current user:', currentUser);
+  console.log('LocalStorage usage:', JSON.stringify(localStorage).length, 'characters');
+}
 </script>
 </body>
 </html>
