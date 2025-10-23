@@ -1,571 +1,392 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Memory Lane — Profiles, Likes & Comments</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Lane</title>
 <style>
-  :root{
-    --bg:#f3f5f9; --card:#fff; --text:#0f1724; --muted:#64748b;
-    --accent: linear-gradient(135deg,#8B5CF6,#EC4899);
-    --radius:12px; --shadow: 0 12px 30px rgba(2,6,23,0.06);
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:var(--bg);color:var(--text)}
-  .container{max-width:1100px;margin:28px auto;padding:18px}
-  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-  .brand{display:flex;gap:12px;align-items:center}
-  .mark{width:48px;height:48px;border-radius:12px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:white;font-weight:800}
-  .title{font-weight:800}
-  .sub{color:var(--muted);font-size:13px}
-  .auth{display:flex;gap:12px;align-items:center}
-
-  .grid{display:grid;grid-template-columns:300px 1fr;gap:20px}
-  .sidebar{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
-  .section{margin-bottom:14px}
-  .section h4{margin:0 0 8px 0;color:var(--muted);font-size:13px}
-  .friends-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .friend-card{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;border:1px solid rgba(15,23,36,0.04);cursor:pointer}
-  .avatar{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;background:linear-gradient(135deg,#8B5CF6,#EC4899);overflow:hidden}
-  .friend-meta{font-size:13px}
-  .friend-name{font-weight:700}
-  .friend-bday{color:var(--muted);font-size:12px;margin-top:3px}
-
-  .main-card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
-  .profile-head{display:flex;gap:16px;align-items:center;margin-bottom:12px}
-  .profile-avatar{width:88px;height:88px;border-radius:14px;background:linear-gradient(135deg,#8B5CF6,#EC4899);display:flex;align-items:center;justify-content:center;color:white;font-weight:900;font-size:32px;overflow:hidden}
-  .profile-info h2{margin:0;font-size:20px}
-  .profile-info p{margin:6px 0;color:var(--muted)}
-  .actions{margin-left:auto;display:flex;gap:8px}
-
-  .toolbar{display:flex;gap:10px;align-items:center;margin-bottom:12px}
-  .btn{padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
-  .btn-primary{background:linear-gradient(135deg,#8B5CF6,#EC4899);color:white}
-  .btn-ghost{background:transparent;border:1px solid rgba(15,23,36,0.06)}
-
-  .post-form{margin-bottom:14px;padding:10px;border-radius:10px;border:1px solid rgba(15,23,36,0.04);background:#fbfbfd}
-  .post-form input[type="file"]{padding:6px 0}
-  .post-form .row{display:flex;gap:8px;flex-wrap:wrap}
-  .posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
-  .post{background:var(--card);border-radius:12px;overflow:hidden;border:1px solid rgba(15,23,36,0.04);display:flex;flex-direction:column}
-  .post-img{width:100%;height:190px;object-fit:cover;background:#eee}
-  .post-body{padding:10px;display:flex;flex-direction:column;gap:8px}
-  .caption{font-size:14px;color:var(--text)}
-  .small{font-size:12px;color:var(--muted)}
-  .post-meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
-  .icon{cursor:pointer;border:none;background:transparent;font-size:18px}
-  .like-count{font-weight:700;color:#e11d48}
-
-  /* modal */
-  .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center;z-index:60}
-  .modal{background:var(--card);padding:12px;border-radius:10px;max-width:900px;width:94%;box-shadow:var(--shadow);display:flex;gap:12px}
-  .modal-img{max-width:60%;height:auto;border-radius:8px}
-  .modal-side{flex:1;display:flex;flex-direction:column}
-  .comments{margin-top:8px;display:flex;flex-direction:column;gap:8px;max-height:320px;overflow:auto}
-  .comment{padding:8px;border-radius:8px;background:#fbfbfd;border:1px solid rgba(15,23,36,0.04)}
-  .comment .meta{font-size:12px;color:var(--muted)}
-  .comment-form{display:flex;gap:8px;margin-top:auto}
-  .comment-form input{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(15,23,36,0.06)}
-
-  .footer-note{margin-top:14px;color:var(--muted);font-size:13px}
-
-  @media(max-width:920px){ .grid{grid-template-columns:1fr} .modal{flex-direction:column} .modal-img{max-width:100%}}
+:root{
+  --primary:#8B5CF6;
+  --accent:#EC4899;
+  --bg:#f8f9fa;
+  --card:#fff;
+  --text:#1e293b;
+  --muted:#64748b;
+  --shadow:0 8px 20px rgba(0,0,0,0.1);
+  --radius:12px;
+}
+body.dark{
+  --bg:#121212;
+  --card:#1e1e1e;
+  --text:#f3f3f3;
+  --muted:#a0a0a0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:0.3s;
+}
+.container{
+  max-width:1200px;
+  margin:0 auto;
+  padding:20px;
+}
+/* Header */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px;
+  background:var(--card);
+  box-shadow:var(--shadow);
+  border-radius:var(--radius);
+  margin-bottom:20px;
+}
+header h1{
+  font-size:1.8rem;
+  background:linear-gradient(135deg,#8B5CF6,#EC4899);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.dark-toggle{
+  cursor:pointer;
+  padding:6px 12px;
+  border:none;
+  border-radius:8px;
+  background:var(--primary);
+  color:white;
+  font-weight:600;
+}
+/* Login */
+#loginArea{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  max-width:300px;
+  margin:100px auto;
+  background:var(--card);
+  padding:20px;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+#loginArea input, #loginArea button{
+  padding:10px;
+  border-radius:8px;
+  border:1px solid var(--muted);
+}
+#loginArea button{
+  background:var(--primary);
+  color:white;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+}
+#dashboard{display:none;}
+.profile-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+.profile-header h2{font-size:1.5rem;}
+.btn{padding:6px 12px;border:none;border-radius:8px;cursor:pointer;font-weight:600;}
+.btn-primary{background:var(--primary);color:white;}
+.btn-danger{background:red;color:white;}
+.posts-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:20px;
+}
+.post-card{
+  background:var(--card);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:10px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.post-card img{
+  width:100%;
+  border-radius:var(--radius);
+  cursor:pointer;
+}
+.post-caption{font-size:0.9rem;color:var(--text);}
+.post-date{font-size:0.8rem;color:var(--muted);}
+.post-actions{display:flex;justify-content:space-between;align-items:center;}
+.comment-input{width:100%;padding:6px;border-radius:8px;border:1px solid var(--muted);}
+.comments{font-size:0.8rem;color:var(--muted);}
+.upload-section{
+  margin-bottom:20px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.user-list{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+.user-btn{
+  padding:6px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  background:var(--primary);
+  color:white;
+}
 </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <div class="brand">
-      <div class="mark">ML</div>
-      <div>
-        <div class="title">Memory Lane</div>
-        <div class="sub">Private, local, yours</div>
-      </div>
-    </div>
+<header>
+  <h1>Memory Lane</h1>
+  <button class="dark-toggle">🌓</button>
+</header>
 
-    <div class="auth" id="authArea">
-      <!-- login UI / logged in info injected here -->
-    </div>
-  </header>
-
-  <!-- LOGIN screen -->
-  <div id="loginScreen" class="main-card" style="max-width:680px;margin:0 auto;">
-    <h3>Sign in</h3>
-    <p class="small">Use name (username) + birthday (YYYY-MM-DD) as password.</p>
-    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-      <input id="loginName" placeholder="Name (e.g., Ritika)" style="padding:10px;border-radius:10px;border:1px solid #e6eef8;flex:1"/>
-      <input id="loginPass" placeholder="Birthday (YYYY-MM-DD)" style="padding:10px;border-radius:10px;border:1px solid #e6eef8;width:220px"/>
-      <button id="loginBtn" class="btn btn-primary">Login</button>
-    </div>
-    <p id="loginErr" style="color:#c62828;margin-top:8px"></p>
-    <p class="footer-note">Demo quick-login: <button id="demoBtn" class="btn btn-ghost">Login as Shifa</button></p>
-  </div>
-
-  <!-- APP -->
-  <div id="appGrid" class="grid" style="display:none">
-    <aside class="sidebar">
-      <div class="section">
-        <h4>Signed in as</h4>
-        <div id="signedInBox" class="small"></div>
-      </div>
-
-      <div class="section">
-        <h4>Friends</h4>
-        <div class="friends-grid" id="friendsList"></div>
-      </div>
-
-      <div class="section">
-        <h4>Upcoming birthdays (30d)</h4>
-        <div id="upcomingList" class="small"></div>
-      </div>
-    </aside>
-
-    <main>
-      <div class="main-card">
-        <div class="profile-head">
-          <div class="profile-avatar" id="profileAvatar">S</div>
-          <div class="profile-info">
-            <h2 id="profileName">Name</h2>
-            <p id="profileBio" class="small">Short bio</p>
-            <p id="profileBday" class="small">Birthday</p>
-          </div>
-          <div class="actions">
-            <button id="editProfile" class="btn btn-ghost">Edit</button>
-            <button id="logoutBtn" class="btn">Logout</button>
-          </div>
-        </div>
-
-        <div class="toolbar">
-          <button id="newPostBtn" class="btn btn-primary">+ New Post</button>
-          <div style="flex:1"></div>
-          <div class="small">Viewing: <span id="viewLabel"></span></div>
-        </div>
-
-        <div class="post-form" id="postForm" style="display:none">
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <input id="postImage" type="file" accept="image/*"/>
-            <input id="postCaption" placeholder="Caption (optional)"/>
-            <input id="postMemoryDate" type="date" />
-            <select id="postTags" multiple style="min-width:170px;padding:8px;border-radius:8px"></select>
-            <div style="display:flex;gap:8px">
-              <button id="savePost" class="btn btn-primary">Post</button>
-              <button id="cancelPost" class="btn btn-ghost">Cancel</button>
-            </div>
-          </div>
-        </div>
-
-        <div id="postsArea">
-          <div class="posts-grid" id="postsGrid"></div>
-          <div id="noPosts" class="small" style="margin-top:12px"></div>
-        </div>
-
-      </div>
-    </main>
-  </div>
-
+<div id="loginArea">
+  <h3>Login</h3>
+  <input type="text" id="username" placeholder="Username">
+  <input type="text" id="password" placeholder="Birthday (DD/MM/YYYY)">
+  <button id="loginBtn">Login</button>
+  <p id="loginError" style="color:red;font-size:0.9rem;"></p>
 </div>
 
-<!-- modal -->
-<div id="modalRoot" class="modal-backdrop" aria-hidden="true">
-  <div class="modal" role="dialog">
-    <img class="modal-img" id="modalImg" src="" alt="img"/>
-    <div class="modal-side">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <div id="modalCaption" style="font-weight:800"></div>
-          <div id="modalDate" class="small"></div>
-          <div id="modalTags" class="small"></div>
-        </div>
-        <div>
-          <button id="closeModal" class="btn btn-ghost">Close</button>
-        </div>
-      </div>
+<div id="dashboard" class="container">
+  <div class="profile-header">
+    <h2 id="profileName"></h2>
+    <button id="logoutBtn" class="btn btn-danger">Logout</button>
+  </div>
 
-      <div style="margin-top:8px;font-weight:700">Comments</div>
-      <div id="commentsList" class="comments"></div>
+  <div class="user-list" id="userList">
+    <!-- Friends buttons to visit -->
+  </div>
 
-      <div class="comment-form">
-        <input id="commentInput" placeholder="Write a comment..."/>
-        <button id="sendComment" class="btn btn-primary">Send</button>
-      </div>
-    </div>
+  <div class="upload-section">
+    <input type="file" id="imageUpload">
+    <input type="text" id="captionInput" placeholder="Caption">
+    <input type="date" id="memoryDate">
+    <button id="uploadBtn" class="btn btn-primary">Upload</button>
+  </div>
+
+  <div class="posts-grid" id="postsGrid">
+    <!-- Posts appear here -->
   </div>
 </div>
 
 <script>
-/* ---------- FRIENDS (your exact list) ---------- */
-const FRIENDS = [
-  {name:'Ritika', birthday:'2008-07-06', bio:'Im only 17,dont know anything but I know that I love you'},
-  {name:'Vidhi', birthday:'2008-11-12', bio:'Mainu ishq tera lae dooba'},
-  {name:'Saksham', birthday:'2009-01-24', bio:'Ok'},
-  {name:'Harshit', birthday:'2007-01-23', bio:'ligma'},
-  {name:'Sai', birthday:'2008-03-04', bio:'Anime gooner'},
-  {name:'Juili', birthday:'2008-05-25', bio:'test'},
-  {name:'Kunal', birthday:'2008-10-19', bio:'everything but studying'},
-  {name:'Ayaan', birthday:'2008-01-16', bio:'Kabhi Khushi and LOts of Gambh'},
-  {name:'Amrut', birthday:'2005-09-20', bio:'Buddha'},
-  {name:'Shifa', birthday:'2008-06-10', bio:'Poetry wali'}
+// Users
+const users = [
+  {name:"Ritika",birthday:"06/07/2008"},
+  {name:"Vidhi",birthday:"12/11/2008"},
+  {name:"Saksham",birthday:"24/01/2009"},
+  {name:"Harshit",birthday:"23/01/2007"},
+  {name:"Sai",birthday:"04/03/2008"},
+  {name:"Juili",birthday:"25/05/2008"},
+  {name:"Kunal",birthday:"19/10/2008"},
+  {name:"Ayaan",birthday:"16/01/2008"},
+  {name:"Amrut",birthday:"20/09/2005"},
+  {name:"Shifa",birthday:"10/06/2008"}
 ];
 
-/* ---------- LocalStorage keys ---------- */
-const postsKey = username => `ml_posts_${username.toLowerCase()}`; // array of posts
-const avatarKey = username => `ml_avatar_${username.toLowerCase()}`; // optional avatar dataURL
-const profileKey = username => `ml_profile_${username.toLowerCase()}`; // bio overrides
+// State
+let currentUser=null;
+let viewingUser=null;
+let posts=[]; // {user,image,caption,date,likes[],comments[]}
 
-/* ---------- App State ---------- */
-let logged = null;    // full friend object of logged in user
-let viewing = null;   // username being viewed (string)
-
-/* ---------- UI Refs ---------- */
-const loginScreen = document.getElementById('loginScreen');
-const loginName = document.getElementById('loginName');
-const loginPass = document.getElementById('loginPass');
-const loginBtn = document.getElementById('loginBtn');
-const demoBtn = document.getElementById('demoBtn');
-const loginErr = document.getElementById('loginErr');
-const appGrid = document.getElementById('appGrid');
-const authArea = document.getElementById('authArea');
-const signedInBox = document.getElementById('signedInBox');
-const friendsList = document.getElementById('friendsList');
-const upcomingList = document.getElementById('upcomingList');
-
-const profileAvatar = document.getElementById('profileAvatar');
-const profileName = document.getElementById('profileName');
-const profileBio = document.getElementById('profileBio');
-const profileBday = document.getElementById('profileBday');
-const viewLabel = document.getElementById('viewLabel');
-
-const newPostBtn = document.getElementById('newPostBtn');
-const postForm = document.getElementById('postForm');
-const postImage = document.getElementById('postImage');
-const postCaption = document.getElementById('postCaption');
-const postMemoryDate = document.getElementById('postMemoryDate');
-const postTags = document.getElementById('postTags');
-const savePost = document.getElementById('savePost');
-const cancelPost = document.getElementById('cancelPost');
-
-const postsGrid = document.getElementById('postsGrid');
-const noPosts = document.getElementById('noPosts');
-
-const modalRoot = document.getElementById('modalRoot');
-const modalImg = document.getElementById('modalImg');
-const modalCaption = document.getElementById('modalCaption');
-const modalDate = document.getElementById('modalDate');
-const modalTags = document.getElementById('modalTags');
-const commentsList = document.getElementById('commentsList');
-const commentInput = document.getElementById('commentInput');
-const sendComment = document.getElementById('sendComment');
-const closeModalBtn = document.getElementById('closeModal');
-
-const editProfileBtn = document.getElementById('editProfile');
-const logoutBtn = document.getElementById('logoutBtn');
-
-/* ---------- Utilities ---------- */
-function savePostsFor(user, arr){ localStorage.setItem(postsKey(user), JSON.stringify(arr)); }
-function loadPostsFor(user){ return JSON.parse(localStorage.getItem(postsKey(user)) || '[]'); }
-function saveAvatarFor(user, dataUrl){ localStorage.setItem(avatarKey(user), dataUrl); }
-function loadAvatarFor(user){ return localStorage.getItem(avatarKey(user)); }
-function saveProfileFor(user, obj){ localStorage.setItem(profileKey(user), JSON.stringify(obj)); }
-function loadProfileFor(user){ return JSON.parse(localStorage.getItem(profileKey(user)) || 'null') || {}; }
-
-function findFriend(name){ return FRIENDS.find(f => f.name.toLowerCase() === String(name).toLowerCase()); }
-function fmtDateShort(d){ if(!d) return ''; const D = new Date(d); if(isNaN(D)) return d; return D.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
-function uid(){ return 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2,9); }
-
-/* ---------- Auth Flow ---------- */
-loginBtn.addEventListener('click', ()=> {
-  loginErr.textContent = '';
-  const name = (loginName.value || '').trim();
-  const pass = (loginPass.value || '').trim();
-  if(!name || !pass){ loginErr.textContent = 'Enter both name and birthday (YYYY-MM-DD)'; return; }
-  const found = FRIENDS.find(f => f.name.toLowerCase() === name.toLowerCase() && f.birthday === pass);
-  if(!found){ loginErr.textContent = 'Invalid credentials'; return; }
-  doLogin(found);
-});
-demoBtn.addEventListener('click', ()=> {
-  const sh = FRIENDS.find(f => f.name === 'Shifa');
-  doLogin(sh);
-});
-
-function doLogin(user){
-  logged = user;
-  localStorage.setItem('ml_logged', user.name);
-  loginScreen.style.display = 'none';
-  appGrid.style.display = 'grid';
-  renderAuthArea();
-  renderSidebar();
-  openProfile(user.name);
+// Load posts from localStorage
+if(localStorage.getItem('posts')){
+  posts=JSON.parse(localStorage.getItem('posts'));
 }
 
-/* auto-login if session exists */
-(function tryAutoLogin(){
-  const saved = localStorage.getItem('ml_logged');
-  if(saved){
-    const f = findFriend(saved);
-    if(f) doLogin(f);
+// Elements
+const loginArea=document.getElementById('loginArea');
+const dashboard=document.getElementById('dashboard');
+const loginBtn=document.getElementById('loginBtn');
+const logoutBtn=document.getElementById('logoutBtn');
+const usernameInput=document.getElementById('username');
+const passwordInput=document.getElementById('password');
+const loginError=document.getElementById('loginError');
+const profileName=document.getElementById('profileName');
+const userList=document.getElementById('userList');
+const postsGrid=document.getElementById('postsGrid');
+const imageUpload=document.getElementById('imageUpload');
+const captionInput=document.getElementById('captionInput');
+const memoryDate=document.getElementById('memoryDate');
+const uploadBtn=document.getElementById('uploadBtn');
+const darkToggle=document.querySelector('.dark-toggle');
+
+// Dark Mode
+darkToggle.onclick=()=>document.body.classList.toggle('dark');
+
+// Login
+loginBtn.onclick=()=>{
+  const uname=usernameInput.value.trim();
+  const pwd=passwordInput.value.trim();
+  const user=users.find(u=>u.name.toLowerCase()===uname.toLowerCase() && u.birthday===pwd);
+  if(user){
+    currentUser=user;
+    viewingUser=user;
+    loginArea.style.display='none';
+    dashboard.style.display='block';
+    renderDashboard();
+    loginError.textContent='';
+  }else{
+    loginError.textContent='Invalid username or birthday';
   }
-})();
+};
 
-/* render header auth area */
-function renderAuthArea(){
-  authArea.innerHTML = '';
-  const who = document.createElement('div'); who.className='small'; who.textContent = `Signed in as ${logged.name}`;
-  const logout = document.createElement('button'); logout.className='btn btn-ghost'; logout.textContent='Logout';
-  logout.onclick = ()=> {
-    if(confirm('Logout?')){ localStorage.removeItem('ml_logged'); logged = null; viewing = null; appGrid.style.display='none'; loginScreen.style.display='block'; }
-  };
-  authArea.appendChild(who); authArea.appendChild(logout);
-  signedInBox.textContent = `${logged.name} • ${fmtDateShort(logged.birthday)}`;
-}
+// Logout
+logoutBtn.onclick=()=>{
+  currentUser=null;
+  viewingUser=null;
+  dashboard.style.display='none';
+  loginArea.style.display='block';
+};
 
-/* ---------- Sidebar (friends & upcoming) ---------- */
-function renderSidebar(){
-  // friends grid
-  friendsList.innerHTML = '';
-  FRIENDS.forEach(f=>{
-    const el = document.createElement('div'); el.className='friend-card';
-    el.onclick = ()=> openProfile(f.name);
-    const av = document.createElement('div'); av.className='avatar'; av.id = 'side_av_' + f.name;
-    const savedAv = loadAvatarFor(f.name);
-    if(savedAv){ av.style.backgroundImage = `url(${savedAv})`; av.style.backgroundSize='cover'; av.textContent=''; }
-    else av.textContent = f.name[0];
-    const meta = document.createElement('div'); meta.className='friend-meta';
-    meta.innerHTML = `<div class="friend-name">${f.name}${f.name===logged.name?' (you)':''}</div><div class="friend-bday">${fmtDateShort(f.birthday)}</div>`;
-    el.appendChild(av); el.appendChild(meta);
-    friendsList.appendChild(el);
-  });
-  // upcoming
-  const today = new Date();
-  const upcoming = FRIENDS.map(f=>{
-    const b = new Date(f.birthday); b.setFullYear(today.getFullYear());
-    const diff = Math.round((b - today)/(1000*60*60*24));
-    return {...f, diff, nextB: b};
-  }).filter(x=>x.diff>=0 && x.diff<=30).sort((a,b)=>a.diff - b.diff);
-  upcomingList.innerHTML = upcoming.length ? upcoming.map(u=>`${u.name} — ${fmtDateShort(u.birthday)} (${u.diff}d)`).join('<br>') : 'No birthdays in next 30 days';
-}
-
-/* ---------- Profile view ---------- */
-function openProfile(username){
-  viewing = username;
-  // set header / profile info
-  const fr = findFriend(username);
-  const prof = loadProfileFor(username);
-  profileName.textContent = fr.name + (fr.name === logged.name ? ' • you' : '');
-  profileBio.textContent = prof.bio || fr.bio || '';
-  profileBday.textContent = 'Birthday • ' + fmtDateShort(fr.birthday);
-  // avatar
-  const av = loadAvatarFor(username);
-  if(av){ profileAvatar.style.backgroundImage = `url(${av})`; profileAvatar.textContent=''; profileAvatar.style.backgroundSize='cover'; }
-  else { profileAvatar.style.backgroundImage=''; profileAvatar.textContent = fr.name[0]; }
-  // view label
-  viewLabel.textContent = (fr.name === logged.name) ? 'Your profile' : `${fr.name}'s profile`;
-  // show/hide post form and edit button
-  postForm.style.display = (fr.name === logged.name) ? 'block' : 'none';
-  editProfileBtn.style.display = (fr.name === logged.name) ? 'inline-flex' : 'none';
-  // fill tag select with friends except current owner
-  postTags.innerHTML = FRIENDS.filter(f => f.name !== logged.name).map(f => `<option value="${f.name}">${f.name}</option>`).join('');
-  // render posts
-  renderPosts(username);
-}
-
-/* ---------- Posts rendering ---------- */
-function renderPosts(username){
-  postsGrid.innerHTML = '';
-  const posts = loadPostsFor(username).slice().reverse(); // show newest first
-  if(posts.length === 0){ noPosts.textContent = 'No posts yet'; return; }
-  noPosts.textContent = '';
-  posts.forEach(post=>{
-    const el = document.createElement('div'); el.className='post';
-    // image
-    const img = document.createElement('img'); img.className='post-img'; img.src = post.image;
-    img.onclick = ()=> openModal(post, username);
-    el.appendChild(img);
-    // body
-    const body = document.createElement('div'); body.className='post-body';
-    const cap = document.createElement('div'); cap.className='caption'; cap.textContent = post.caption || '';
-    body.appendChild(cap);
-    const dateLine = document.createElement('div'); dateLine.className='small'; dateLine.textContent = post.memoryDate ? '📅 Memory: ' + fmtDateShort(post.memoryDate) : '';
-    body.appendChild(dateLine);
-    if(post.tags && post.tags.length) {
-      const t = document.createElement('div'); t.className='small'; t.textContent = '👥 Tagged: ' + post.tags.join(', ');
-      body.appendChild(t);
+// Render Dashboard
+function renderDashboard(){
+  profileName.textContent=viewingUser.name+"'s Profile";
+  // Friends buttons
+  userList.innerHTML='';
+  users.forEach(u=>{
+    if(u.name!==currentUser.name){
+      const btn=document.createElement('button');
+      btn.textContent=u.name;
+      btn.className='user-btn';
+      btn.onclick=()=>{viewingUser=u;renderDashboard();}
+      userList.appendChild(btn);
     }
-    // meta row: likes, comment count, delete (if owner)
-    const meta = document.createElement('div'); meta.className='post-meta';
-    const left = document.createElement('div');
-    const likeBtn = document.createElement('button'); likeBtn.className='icon'; likeBtn.innerHTML = post.likes && post.likes.includes(logged.name) ? '❤️' : '🤍';
-    likeBtn.onclick = ()=> { toggleLike(username, post.id); renderPosts(viewing); };
-    const likeCount = document.createElement('span'); likeCount.className='like-count'; likeCount.textContent = (post.likes || []).length ? ' ' + (post.likes.length) : ' 0';
-    left.appendChild(likeBtn); left.appendChild(likeCount);
-    const right = document.createElement('div');
-    const comBtn = document.createElement('button'); comBtn.className='icon'; comBtn.innerHTML = '💬'; comBtn.title='View & add comments';
-    comBtn.onclick = ()=> openModal(post, username);
-    right.appendChild(comBtn);
-    if(username === logged.name){
-      const del = document.createElement('button'); del.className='icon'; del.innerHTML='🗑️'; del.title='Delete';
-      del.onclick = ()=> { if(confirm('Delete this post?')){ deletePost(username, post.id); } };
-      right.appendChild(del);
-    }
-    meta.appendChild(left); meta.appendChild(right);
-    body.appendChild(meta);
-    el.appendChild(body);
-    postsGrid.appendChild(el);
   });
+  renderPosts();
 }
 
-/* ---------- Create / Delete ---------- */
-newPostBtn.addEventListener('click', ()=> { postForm.style.display = 'block'; });
-cancelPost.addEventListener('click', ()=> { postForm.style.display = 'none'; clearPostForm(); });
-
-savePost.addEventListener('click', async ()=> {
-  const file = postImage.files[0];
-  const caption = postCaption.value.trim();
-  const memoryDate = postMemoryDate.value;
-  const tags = Array.from(postTags.selectedOptions).map(o=>o.value);
-  if(!file){ alert('Choose an image'); return; }
-  if(!memoryDate){ if(!confirm('No memory date set. Use today as memory date?')) return; }
-  const dataURL = await toDataURL(file);
-  const posts = loadPostsFor(logged.name);
-  posts.push({ id: uid(), image: dataURL, caption, memoryDate, tags, likes: [], comments: [], createdAt: Date.now() });
-  savePostsFor(logged.name, posts);
-  postForm.style.display = 'none';
-  clearPostForm();
-  if(viewing === logged.name) renderPosts(logged.name);
-  else openProfile(viewing); // refresh view if needed
-});
-
-function deletePost(owner, postId){
-  let posts = loadPostsFor(owner).filter(p=>p.id !== postId);
-  savePostsFor(owner, posts);
-  if(viewing === owner) renderPosts(owner);
-}
-
-/* convert file -> dataURL */
-function toDataURL(file){ return new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(file); }); }
-function clearPostForm(){ postImage.value=''; postCaption.value=''; postMemoryDate.value=''; for(let i=0;i<postTags.options.length;i++) postTags.options[i].selected=false; }
-
-/* ---------- Likes ---------- */
-function toggleLike(owner, postId){
-  const posts = loadPostsFor(owner);
-  const p = posts.find(x=>x.id===postId);
-  if(!p) return;
-  p.likes = p.likes || [];
-  const idx = p.likes.indexOf(logged.name);
-  if(idx === -1) p.likes.push(logged.name); else p.likes.splice(idx,1);
-  savePostsFor(owner, posts);
-}
-
-/* ---------- Comments ---------- */
-/* open modal to view full image + comments + add comment */
-let modalOpenPost = null;
-let modalOpenOwner = null;
-
-function openModal(post, owner){
-  modalOpenPost = post;
-  modalOpenOwner = owner;
-  modalImg.src = post.image;
-  modalCaption.textContent = post.caption || '';
-  modalDate.textContent = post.memoryDate ? '📅 ' + fmtDateShort(post.memoryDate) : '';
-  modalTags.textContent = (post.tags && post.tags.length) ? '👥 Tagged: ' + post.tags.join(', ') : '';
-  renderComments(post);
-  modalRoot.style.display = 'flex'; commentInput.value=''; commentInput.focus();
-}
-closeModalBtn.addEventListener('click', ()=> modalRoot.style.display = 'none');
-modalRoot.addEventListener('click', (e)=> { if(e.target === modalRoot) modalRoot.style.display='none'; });
-
-function renderComments(post){
-  commentsList.innerHTML = '';
-  const comments = post.comments || [];
-  if(comments.length === 0) commentsList.innerHTML = '<div class="small">No comments yet</div>';
-  else comments.forEach(c=>{
-    const el = document.createElement('div'); el.className='comment';
-    el.innerHTML = `<div style="font-weight:700">${c.user}</div><div class="meta">${new Date(c.at).toLocaleString()}</div><div style="margin-top:6px">${c.text}</div>`;
-    commentsList.appendChild(el);
+// Render Posts
+function renderPosts(){
+  postsGrid.innerHTML='';
+  const userPosts=posts.filter(p=>p.user===viewingUser.name);
+  if(userPosts.length===0){
+    postsGrid.innerHTML='<p>No posts yet.</p>';
+    return;
+  }
+  userPosts.forEach((p,i)=>{
+    const card=document.createElement('div');
+    card.className='post-card';
+    const img=document.createElement('img');
+    img.src=p.image;
+    img.onclick=()=>window.open(p.image,'_blank');
+    const caption=document.createElement('div');
+    caption.className='post-caption';
+    caption.textContent=p.caption;
+    const dateDiv=document.createElement('div');
+    dateDiv.className='post-date';
+    dateDiv.textContent=p.memoryDate;
+    const actions=document.createElement('div');
+    actions.className='post-actions';
+    
+    // Likes
+    const likeBtn=document.createElement('button');
+    likeBtn.textContent=`❤️ ${p.likes.length}`;
+    likeBtn.className='btn btn-primary';
+    likeBtn.onclick=()=>{
+      if(!p.likes.includes(currentUser.name)) p.likes.push(currentUser.name);
+      else p.likes=p.likes.filter(l=>l!==currentUser.name);
+      savePosts();
+      renderPosts();
+    };
+    
+    // Delete if owner
+    let delBtn=null;
+    if(p.user===currentUser.name){
+      delBtn=document.createElement('button');
+      delBtn.textContent='Delete';
+      delBtn.className='btn btn-danger';
+      delBtn.onclick=()=>{
+        if(confirm('Delete this post?')){
+          posts.splice(posts.indexOf(p),1);
+          savePosts();
+          renderPosts();
+        }
+      };
+    }
+    
+    // Comments
+    const commentDiv=document.createElement('div');
+    commentDiv.className='comments';
+    p.comments.forEach(c=>{
+      const cDiv=document.createElement('div');
+      cDiv.textContent=`${c.user}: ${c.text}`;
+      commentDiv.appendChild(cDiv);
+    });
+    const commentInput=document.createElement('input');
+    commentInput.placeholder='Comment...';
+    commentInput.className='comment-input';
+    commentInput.onkeypress=(e)=>{
+      if(e.key==='Enter' && commentInput.value.trim()!==''){
+        p.comments.push({user:currentUser.name,text:commentInput.value.trim()});
+        commentInput.value='';
+        savePosts();
+        renderPosts();
+      }
+    };
+    
+    actions.appendChild(likeBtn);
+    if(delBtn) actions.appendChild(delBtn);
+    
+    card.appendChild(img);
+    card.appendChild(caption);
+    card.appendChild(dateDiv);
+    card.appendChild(actions);
+    card.appendChild(commentDiv);
+    card.appendChild(commentInput);
+    postsGrid.appendChild(card);
   });
 }
 
-/* send comment */
-sendComment.addEventListener('click', ()=> {
-  const txt = commentInput.value.trim();
-  if(!txt){ alert('Write something'); return; }
-  // add to post in storage
-  const posts = loadPostsFor(modalOpenOwner);
-  const p = posts.find(x=>x.id === modalOpenPost.id);
-  if(!p) return alert('Post not found');
-  p.comments = p.comments || [];
-  p.comments.push({ user: logged.name, text: txt, at: Date.now() });
-  savePostsFor(modalOpenOwner, posts);
-  // update modal and post list
-  renderComments(p);
-  commentInput.value = '';
-  // also update posts area (counts etc)
-  if(viewing === modalOpenOwner) renderPosts(viewing);
-});
+// Upload
+uploadBtn.onclick=async()=>{
+  if(!imageUpload.files[0]) return alert('Select an image');
+  const file=imageUpload.files[0];
+  const resized=await resizeImage(file,1);
+  posts.push({
+    user:currentUser.name,
+    image:resized,
+    caption:captionInput.value.trim(),
+    memoryDate:memoryDate.value,
+    likes:[],
+    comments:[]
+  });
+  captionInput.value='';
+  memoryDate.value='';
+  imageUpload.value='';
+  savePosts();
+  renderPosts();
+};
 
-/* ---------- Profile edit (bio & avatar) ---------- */
-editProfileBtn.addEventListener('click', ()=> {
-  const name = logged.name;
-  const prof = loadProfileFor(name) || {};
-  const modal = createModal(`
-    <div style="width:420px">
-      <h3>Edit profile</h3>
-      <div style="margin-top:8px">
-        <label class="small">Bio</label>
-        <textarea id="editBio" style="width:100%;height:80px;border-radius:8px">${prof.bio || ''}</textarea>
-      </div>
-      <div style="margin-top:8px">
-        <label class="small">Avatar image</label>
-        <input id="editAvatar" type="file" accept="image/*"/>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
-        <button id="cancelEdit" class="btn btn-ghost">Cancel</button>
-        <button id="saveEdit" class="btn btn-primary">Save</button>
-      </div>
-    </div>
-  `);
-  document.getElementById('cancelEdit').onclick = ()=> closeCustomModal();
-  document.getElementById('saveEdit').onclick = async ()=>{
-    const newBio = document.getElementById('editBio').value.trim();
-    const file = document.getElementById('editAvatar').files[0];
-    if(file){
-      const d = await toDataURL(file);
-      saveAvatarFor(name, d);
-    }
-    saveProfileFor(name, { bio: newBio });
-    closeCustomModal();
-    renderSidebar();
-    openProfile(viewing || name);
-  };
-});
+// Save posts
+function savePosts(){localStorage.setItem('posts',JSON.stringify(posts));}
 
-function createModal(innerHtml){
-  const wrapper = document.createElement('div'); wrapper.className='modal-backdrop'; wrapper.style.display='flex';
-  const box = document.createElement('div'); box.className='modal'; box.style.maxWidth='480px'; box.innerHTML = innerHtml;
-  wrapper.appendChild(box);
-  document.body.appendChild(wrapper);
-  wrapper.addEventListener('click', (e)=> { if(e.target === wrapper){ wrapper.remove(); } });
-  return wrapper;
+// Resize image
+function resizeImage(file,maxMB=1){
+  return new Promise((res,rej)=>{
+    const img=new Image();
+    const fr=new FileReader();
+    fr.onload=e=>img.src=e.target.result;
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      let w=img.width,h=img.height;
+      const ratio=Math.sqrt((w*h)/(maxMB*1024*1024*4));
+      if(ratio>1){w/=ratio;h/=ratio;}
+      canvas.width=w;canvas.height=h;
+      const ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,w,h);
+      res(canvas.toDataURL('image/jpeg',0.8));
+    };
+    fr.onerror=rej;
+    fr.readAsDataURL(file);
+  });
 }
-function closeCustomModal(){ const m = document.querySelector('body > .modal-backdrop'); if(m) m.remove(); }
-
-/* ---------- Helpers & init ---------- */
-function loadInitialIfEmpty(){
-  // optionally preload something for demo (skip)
-}
-loadInitialIfEmpty();
-
-/* show profile */
-function openProfileFromNav(name){ openProfile(name); renderSidebar(); }
-
-/* util: uid */
-function uid(){ return 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2,9); }
-
-/* keep UI consistent if view changed after actions */
-window.addEventListener('storage', ()=> { if(viewing) renderPosts(viewing); renderSidebar(); });
-
-/* initial render if logged in above did call renderSidebar. else show login screen */
-if(!logged){ loginScreen.style.display = 'block'; appGrid.style.display = 'none'; } else { loginScreen.style.display = 'none'; appGrid.style.display = 'grid'; }
-
 </script>
 </body>
 </html>
