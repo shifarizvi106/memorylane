@@ -3,364 +3,290 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Memory Lane IG-style</title>
+<title>Memory Lane - Discord Style</title>
 <style>
-:root{
-  --primary:#8B5CF6;
-  --accent:#EC4899;
-  --bg:#f8f9fa;
-  --card:#fff;
-  --text:#1e293b;
-  --muted:#64748b;
-  --shadow:0 8px 20px rgba(0,0,0,0.1);
-  --radius:12px;
-}
-body.dark{
-  --bg:#121212;
-  --card:#1e1e1e;
-  --text:#f3f3f3;
-  --muted:#a0a0a0;
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-  font-family:'Inter',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  transition:0.3s;
-}
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:16px;
-  background:var(--card);
-  box-shadow:var(--shadow);
-  border-radius:var(--radius);
-  margin:10px;
-}
-header h1{
-  font-size:1.8rem;
-  background:linear-gradient(135deg,#8B5CF6,#EC4899);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.dark-toggle{
-  cursor:pointer;
-  padding:6px 12px;
-  border:none;
-  border-radius:8px;
-  background:var(--primary);
-  color:white;
-  font-weight:600;
-}
-#loginArea{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  max-width:300px;
-  margin:100px auto;
-  background:var(--card);
-  padding:20px;
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-}
-#loginArea input, #loginArea button{
-  padding:10px;
-  border-radius:8px;
-  border:1px solid var(--muted);
-}
-#loginArea button{
-  background:var(--primary);
-  color:white;
-  border:none;
-  cursor:pointer;
-  font-weight:600;
-}
-#dashboard{display:none;padding:0 10px;}
-.profile-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-.profile-header h2{font-size:1.5rem;}
-.friends-bar{
-  display:flex;
-  gap:12px;
-  overflow-x:auto;
-  padding-bottom:10px;
-  margin-bottom:10px;
-}
-.friend-btn{
-  flex:0 0 auto;
-  padding:8px 12px;
-  border-radius:20px;
-  background:var(--primary);
-  color:white;
-  cursor:pointer;
-  white-space:nowrap;
-}
-.posts-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:20px;
-}
-.post-card{
-  background:var(--card);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:10px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-.post-card img{
-  width:100%;
-  border-radius:var(--radius);
-  cursor:pointer;
-}
-.post-caption{font-size:0.9rem;color:var(--text);}
-.post-date{font-size:0.8rem;color:var(--muted);}
-.post-actions{display:flex;justify-content:space-between;align-items:center;gap:5px;}
-.comment-input{width:100%;padding:6px;border-radius:8px;border:1px solid var(--muted);}
-.comments{font-size:0.8rem;color:var(--muted);}
-.upload-section{
-  margin-bottom:20px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.btn{padding:6px 12px;border:none;border-radius:8px;cursor:pointer;font-weight:600;}
-.btn-primary{background:var(--primary);color:white;}
-.btn-danger{background:red;color:white;}
-@media(max-width:768px){
-  .posts-grid{grid-template-columns:1fr;}
-}
+  /* Discord-style dark theme */
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #2f3136;
+    color: #dcddde;
+    margin: 0;
+    display: flex;
+    height: 100vh;
+  }
+  /* Sidebar */
+  .sidebar {
+    width: 220px;
+    background: #202225;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    overflow-y: auto;
+  }
+  .sidebar h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #7289da;
+  }
+  .friend-btn {
+    background: #36393f;
+    border: none;
+    color: #dcddde;
+    padding: 8px;
+    margin-bottom: 6px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+  }
+  .friend-btn:hover {
+    background: #5865f2;
+  }
+  /* Main content */
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .profile-header {
+    padding: 20px;
+    border-bottom: 1px solid #36393f;
+  }
+  .profile-header h1 {
+    margin: 0 0 10px 0;
+    color: #ffffff;
+  }
+  .bio-area {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    background: #40444b;
+    color: #dcddde;
+    resize: none;
+  }
+  .posts-grid {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
+    gap: 15px;
+  }
+  .post-card {
+    background: #36393f;
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  .post-card img {
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 8px;
+  }
+  .post-caption {
+    margin-bottom: 5px;
+  }
+  .post-date {
+    font-size: 0.8rem;
+    color: #b9bbbe;
+    margin-bottom: 8px;
+  }
+  .post-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    background: #5865f2;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .btn-danger {
+    background: #f04747;
+  }
+  .comment-input {
+    flex: 1;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    background: #40444b;
+    color: #dcddde;
+  }
+  .comments {
+    margin-top: 5px;
+    font-size: 0.85rem;
+    color: #dcddde;
+  }
+  .upload-section {
+    display: flex;
+    gap: 8px;
+    padding: 20px;
+    background: #2f3136;
+    border-top: 1px solid #36393f;
+    align-items: center;
+  }
+  .upload-section input[type="file"], .upload-section input[type="text"], .upload-section input[type="date"] {
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    background: #40444b;
+    color: #dcddde;
+  }
+  /* Full screen overlay */
+  .overlay {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.85);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction: column;
+    z-index: 999;
+  }
+  .overlay img {
+    max-width: 90%;
+    max-height: 80%;
+    border-radius: 5px;
+  }
+  .overlay div {
+    color: #dcddde;
+    margin-top: 10px;
+    text-align: center;
+  }
+  /* Login */
+  #loginScreen {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: #2f3136;
+    display:flex;
+    flex-direction: column;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+  }
+  #loginScreen input {
+    padding: 8px;
+    margin: 5px;
+    border-radius: 5px;
+    border: none;
+    background: #40444b;
+    color: #dcddde;
+  }
+  #loginScreen button {
+    margin-top: 10px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    background: #5865f2;
+    color: white;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
-<header>
-  <h1>Memory Lane</h1>
-  <button class="dark-toggle">🌓</button>
-</header>
 
-<div id="loginArea">
-  <h3>Login</h3>
-  <input type="text" id="username" placeholder="Username">
-  <input type="text" id="password" placeholder="Birthday (DD/MM/YYYY)">
-  <button id="loginBtn">Login</button>
-  <p id="loginError" style="color:red;font-size:0.9rem;"></p>
+<div id="loginScreen">
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Username"><br>
+  <input type="password" id="password" placeholder="Birthday (dd-mm-yyyy)"><br>
+  <button onclick="login()">Login</button>
+  <p id="loginError" style="color:red"></p>
 </div>
 
-<div id="dashboard">
+<div class="sidebar" id="sidebar">
+  <h2>Friends</h2>
+  <!-- Friend buttons will go here -->
+</div>
+
+<div class="main-content">
   <div class="profile-header">
-    <h2 id="profileName"></h2>
-    <button id="logoutBtn" class="btn btn-danger">Logout</button>
+    <h1 id="profileName"></h1>
+    <textarea id="bioInput" class="bio-area" placeholder="Write your bio..."></textarea>
   </div>
-
-  <div class="friends-bar" id="friendsBar">
-    <!-- Horizontal scroll friends buttons -->
-  </div>
-
-  <div class="upload-section">
+  <div class="upload-section" id="uploadSection">
     <input type="file" id="imageUpload">
     <input type="text" id="captionInput" placeholder="Caption">
     <input type="date" id="memoryDate">
-    <button id="uploadBtn" class="btn btn-primary">Upload</button>
+    <button id="uploadBtn" class="btn">Post</button>
   </div>
-
-  <div class="posts-grid" id="postsGrid"></div>
+  <div class="posts-grid" id="postsGrid">
+    <!-- Posts go here -->
+  </div>
 </div>
 
 <script>
-// Users
-const users=[
-{name:"Ritika",birthday:"06/07/2008"},
-{name:"Vidhi",birthday:"12/11/2008"},
-{name:"Saksham",birthday:"24/01/2009"},
-{name:"Harshit",birthday:"23/01/2007"},
-{name:"Sai",birthday:"04/03/2008"},
-{name:"Juili",birthday:"25/05/2008"},
-{name:"Kunal",birthday:"19/10/2008"},
-{name:"Ayaan",birthday:"16/01/2008"},
-{name:"Amrut",birthday:"20/09/2005"},
-{name:"Shifa",birthday:"10/06/2008"}
+let users = [
+  {name:'Shifa', birthday:'10-06-2008', bio:'', id:1},
+  {name:'Ritika', birthday:'06-07-2008', bio:'', id:2},
+  {name:'Vidhi', birthday:'12-11-2008', bio:'', id:3},
+  {name:'Saksham', birthday:'24-01-2009', bio:'', id:4},
+  {name:'Harshit', birthday:'23-01-2007', bio:'', id:5},
+  {name:'Sai', birthday:'04-03-2008', bio:'', id:6},
+  {name:'Juili', birthday:'25-05-2008', bio:'', id:7},
+  {name:'Kunal', birthday:'19-10-2008', bio:'', id:8},
+  {name:'Ayaan', birthday:'16-01-2008', bio:'', id:9},
+  {name:'Amrut', birthday:'20-09-2005', bio:'', id:10}
 ];
 
 let currentUser=null;
 let posts=[];
 
-// IndexedDB setup
-let db;
-const request=indexedDB.open('MemoryLaneDB',1);
-request.onupgradeneeded=function(e){
-  db=e.target.result;
-  if(!db.objectStoreNames.contains('posts')){
-    const store=db.createObjectStore('posts',{keyPath:'id',autoIncrement:true});
-  }
-};
-request.onsuccess=function(e){db=e.target.result;loadPosts();checkLogin();};
-request.onerror=function(e){console.error('DB error',e);};
+// Load from localStorage
+if(localStorage.getItem('posts')) posts = JSON.parse(localStorage.getItem('posts'));
+if(localStorage.getItem('users')) users = JSON.parse(localStorage.getItem('users'));
+if(localStorage.getItem('currentUser')) currentUser=JSON.parse(localStorage.getItem('currentUser'));
 
-// Elements
-const loginArea=document.getElementById('loginArea');
-const dashboard=document.getElementById('dashboard');
-const loginBtn=document.getElementById('loginBtn');
-const logoutBtn=document.getElementById('logoutBtn');
-const usernameInput=document.getElementById('username');
-const passwordInput=document.getElementById('password');
-const loginError=document.getElementById('loginError');
-const profileName=document.getElementById('profileName');
-const friendsBar=document.getElementById('friendsBar');
-const postsGrid=document.getElementById('postsGrid');
-const imageUpload=document.getElementById('imageUpload');
-const captionInput=document.getElementById('captionInput');
-const memoryDate=document.getElementById('memoryDate');
-const uploadBtn=document.getElementById('uploadBtn');
-const darkToggle=document.querySelector('.dark-toggle');
+const sidebar = document.getElementById('sidebar');
+const profileName = document.getElementById('profileName');
+const bioInput = document.getElementById('bioInput');
+const postsGrid = document.getElementById('postsGrid');
+const loginScreen = document.getElementById('loginScreen');
+const loginError = document.getElementById('loginError');
+const imageUpload = document.getElementById('imageUpload');
+const captionInput = document.getElementById('captionInput');
+const memoryDate = document.getElementById('memoryDate');
+const uploadBtn = document.getElementById('uploadBtn');
 
-// Dark Mode
-darkToggle.onclick=()=>document.body.classList.toggle('dark');
-
-// Login
-loginBtn.onclick=()=>{
-  const uname=usernameInput.value.trim();
-  const pwd=passwordInput.value.trim();
-  const user=users.find(u=>u.name.toLowerCase()===uname.toLowerCase() && u.birthday===pwd);
+function login(){
+  const u = document.getElementById('username').value.trim();
+  const p = document.getElementById('password').value.trim();
+  const user = users.find(x=>x.name.toLowerCase()===u.toLowerCase() && x.birthday===p);
   if(user){
     currentUser=user;
-    localStorage.setItem('currentUser',JSON.stringify(user));
-    loginArea.style.display='none';
-    dashboard.style.display='block';
-    renderDashboard();
-  }else{
+    localStorage.setItem('currentUser',JSON.stringify(currentUser));
+    loginScreen.style.display='none';
+    renderSidebar();
+    viewProfile(currentUser.name);
+  } else {
     loginError.textContent='Invalid username or birthday';
   }
-};
-function checkLogin(){
-  const savedUser=JSON.parse(localStorage.getItem('currentUser'));
-  if(savedUser){
-    currentUser=savedUser;
-    loginArea.style.display='none';
-    dashboard.style.display='block';
-    renderDashboard();
-  }
-}
-logoutBtn.onclick=()=>{
-  localStorage.removeItem('currentUser');
-  currentUser=null;
-  loginArea.style.display='flex';
-  dashboard.style.display='none';
-};
-
-// Load posts
-function loadPosts(){
-  const tx=db.transaction('posts','readonly');
-  const store=tx.objectStore('posts');
-  store.getAll().onsuccess=function(e){
-    posts=e.target.result;
-    renderDashboard();
-  };
 }
 
-// Save post
-function savePost(post){
-  const tx=db.transaction('posts','readwrite');
-  const store=tx.objectStore('posts');
-  store.add(post).onsuccess=()=>loadPosts();
-}
-
-// Delete post
-function deletePost(id){
-  const tx=db.transaction('posts','readwrite');
-  const store=tx.objectStore('posts');
-  store.delete(id).onsuccess=()=>loadPosts();
-}
-
-// Render Dashboard
-function renderDashboard(){
-  profileName.textContent=currentUser.name+"'s Profile";
-  // Friends Bar
-  friendsBar.innerHTML='';
+function renderSidebar(){
+  sidebar.innerHTML='<h2>Friends</h2>';
   users.forEach(u=>{
-    if(u.name!==currentUser.name){
-      const btn=document.createElement('button');
-      btn.className='friend-btn';
-      btn.textContent=u.name;
-      btn.onclick=()=>viewFriend(u.name);
-      friendsBar.appendChild(btn);
-    }
-  });
-  // Posts Grid (show all)
-  postsGrid.innerHTML='';
-  if(posts.length===0) postsGrid.innerHTML='<p>No posts yet.</p>';
-  posts.slice().reverse().forEach(p=>{
-    const card=document.createElement('div');
-    card.className='post-card';
-    const img=document.createElement('img');
-    img.src=p.image;
-    img.onclick=()=>openFullView(p.image,p.caption);
-    const caption=document.createElement('div');
-    caption.className='post-caption';
-    caption.textContent=p.caption;
-    const date=document.createElement('div');
-    date.className='post-date';
-    date.textContent=p.date+' by '+p.user;
-    const actions=document.createElement('div');
-    actions.className='post-actions';
-    const likeBtn=document.createElement('button');
-    likeBtn.textContent='❤️ '+(p.likes?p.likes:0);
-    likeBtn.className='btn btn-primary';
-    likeBtn.onclick=()=>{
-      if(!p.likes)p.likes=0;
-      p.likes++;
-      updatePost(p);
-    };
-    actions.appendChild(likeBtn);
-    if(p.user===currentUser.name){
-      const delBtn=document.createElement('button');
-      delBtn.textContent='Delete';
-      delBtn.className='btn btn-danger';
-      delBtn.onclick=()=>deletePost(p.id);
-      actions.appendChild(delBtn);
-    }
-    // Comments section
-    const commentBox=document.createElement('div');
-    const commentInput=document.createElement('input');
-    commentInput.className='comment-input';
-    commentInput.placeholder='Add comment';
-    const commentBtn=document.createElement('button');
-    commentBtn.className='btn btn-primary';
-    commentBtn.textContent='Comment';
-    commentBtn.onclick=()=>{
-      if(!p.comments)p.comments=[];
-      if(commentInput.value.trim()==='')return;
-      p.comments.push(currentUser.name+': '+commentInput.value.trim());
-      commentInput.value='';
-      updatePost(p);
-    };
-    commentBox.appendChild(commentInput);
-    commentBox.appendChild(commentBtn);
-    const commentsDiv=document.createElement('div');
-    commentsDiv.className='comments';
-    if(p.comments)p.comments.forEach(c=>{
-      const cDiv=document.createElement('div');
-      cDiv.textContent=c;
-      commentsDiv.appendChild(cDiv);
-    });
-    card.appendChild(img);
-    card.appendChild(caption);
-    card.appendChild(date);
-    card.appendChild(actions);
-    card.appendChild(commentBox);
-    card.appendChild(commentsDiv);
-    postsGrid.appendChild(card);
+    const btn=document.createElement('button');
+    btn.className='friend-btn';
+    btn.textContent=u.name;
+    btn.onclick=()=>viewProfile(u.name);
+    sidebar.appendChild(btn);
   });
 }
 
-// View Friend
-function viewFriend(name){
-  profileName.textContent=name+"'s Profile";
+function viewProfile(name){
+  const user = users.find(u=>u.name===name);
+  profileName.textContent = name+"'s Profile";
+  bioInput.value = user.bio || '';
+  bioInput.disabled = (name!==currentUser.name);
+
+  // Display posts
   postsGrid.innerHTML='';
   posts.slice().reverse().filter(p=>p.user===name).forEach(p=>{
     const card=document.createElement('div');
@@ -371,44 +297,56 @@ function viewFriend(name){
     const caption=document.createElement('div');
     caption.className='post-caption';
     caption.textContent=p.caption;
-    const date=document.createElement('div');
-    date.className='post-date';
-    date.textContent=p.date+' by '+p.user;
+    const dateDiv=document.createElement('div');
+    dateDiv.className='post-date';
+    dateDiv.textContent=p.date;
     const actions=document.createElement('div');
     actions.className='post-actions';
     const likeBtn=document.createElement('button');
-    likeBtn.textContent='❤️ '+(p.likes?p.likes:0);
-    likeBtn.className='btn btn-primary';
+    likeBtn.className='btn';
+    likeBtn.textContent='❤️ '+(p.likes||0);
     likeBtn.onclick=()=>{
       if(!p.likes)p.likes=0;
       p.likes++;
-      updatePost(p);
+      savePosts();
+      viewProfile(name);
     };
     actions.appendChild(likeBtn);
+
+    // Delete button
     if(p.user===currentUser.name){
       const delBtn=document.createElement('button');
-      delBtn.textContent='Delete';
       delBtn.className='btn btn-danger';
-      delBtn.onclick=()=>deletePost(p.id);
+      delBtn.textContent='Delete';
+      delBtn.onclick=()=>{
+        posts = posts.filter(po=>po.id!==p.id);
+        savePosts();
+        viewProfile(name);
+      };
       actions.appendChild(delBtn);
     }
+
     // Comments
     const commentBox=document.createElement('div');
+    commentBox.style.display='flex';
+    commentBox.style.gap='5px';
     const commentInput=document.createElement('input');
     commentInput.className='comment-input';
-    commentInput.placeholder='Add comment';
+    commentInput.placeholder='Comment';
     const commentBtn=document.createElement('button');
-    commentBtn.className='btn btn-primary';
-    commentBtn.textContent='Comment';
+    commentBtn.className='btn';
+    commentBtn.textContent='Post';
     commentBtn.onclick=()=>{
       if(!p.comments)p.comments=[];
-      if(commentInput.value.trim()==='')return;
-      p.comments.push(currentUser.name+': '+commentInput.value.trim());
+      if(commentInput.value.trim()==='') return;
+      p.comments.push(currentUser.name+": "+commentInput.value.trim());
       commentInput.value='';
-      updatePost(p);
+      savePosts();
+      viewProfile(name);
     };
     commentBox.appendChild(commentInput);
     commentBox.appendChild(commentBtn);
+
     const commentsDiv=document.createElement('div');
     commentsDiv.className='comments';
     if(p.comments)p.comments.forEach(c=>{
@@ -416,76 +354,72 @@ function viewFriend(name){
       cDiv.textContent=c;
       commentsDiv.appendChild(cDiv);
     });
+
     card.appendChild(img);
     card.appendChild(caption);
-    card.appendChild(date);
+    card.appendChild(dateDiv);
     card.appendChild(actions);
     card.appendChild(commentBox);
     card.appendChild(commentsDiv);
+
     postsGrid.appendChild(card);
   });
 }
 
-// Update post in DB
-function updatePost(post){
-  const tx=db.transaction('posts','readwrite');
-  const store=tx.objectStore('posts');
-  store.put(post).onsuccess=()=>loadPosts();
-}
+// Save bio
+bioInput.addEventListener('input',()=>{
+  if(currentUser){
+    currentUser.bio=bioInput.value;
+    users = users.map(u=>u.name===currentUser.name?currentUser:u);
+    localStorage.setItem('users',JSON.stringify(users));
+  }
+});
 
-// Upload
+// Upload post
 uploadBtn.onclick=()=>{
   const file=imageUpload.files[0];
-  if(!file){alert('Select an image');return;}
+  if(!file){alert('Select image'); return;}
   const reader=new FileReader();
   reader.onload=function(e){
     const post={
-      user:currentUser.name,
+      id:Date.now(),
+      user: currentUser.name,
       image:e.target.result,
-      caption:captionInput.value.trim(),
-      date:memoryDate.value,
+      caption: captionInput.value.trim(),
+      date: memoryDate.value,
       likes:0,
       comments:[]
     };
-    savePost(post);
-    imageUpload.value='';
-    captionInput.value='';
-    memoryDate.value='';
+    posts.push(post);
+    savePosts();
+    viewProfile(currentUser.name);
+    imageUpload.value=''; captionInput.value=''; memoryDate.value='';
   };
   reader.readAsDataURL(file);
 };
 
-// Full view
+function savePosts(){
+  localStorage.setItem('posts',JSON.stringify(posts));
+}
+
 function openFullView(src,caption){
   const overlay=document.createElement('div');
-  overlay.style.position='fixed';
-  overlay.style.top='0';
-  overlay.style.left='0';
-  overlay.style.width='100%';
-  overlay.style.height='100%';
-  overlay.style.background='rgba(0,0,0,0.8)';
-  overlay.style.display='flex';
-  overlay.style.alignItems='center';
-  overlay.style.justifyContent='center';
-  overlay.style.zIndex='999';
+  overlay.className='overlay';
   const img=document.createElement('img');
   img.src=src;
-  img.style.maxWidth='90%';
-  img.style.maxHeight='80%';
   const cap=document.createElement('div');
   cap.textContent=caption;
-  cap.style.color='white';
-  cap.style.marginTop='10px';
-  cap.style.textAlign='center';
-  const container=document.createElement('div');
-  container.style.display='flex';
-  container.style.flexDirection='column';
-  container.style.alignItems='center';
-  container.appendChild(img);
-  container.appendChild(cap);
-  overlay.appendChild(container);
+  overlay.appendChild(img);
+  overlay.appendChild(cap);
   overlay.onclick=()=>overlay.remove();
   document.body.appendChild(overlay);
+}
+
+// On load
+if(currentUser){
+  loginScreen.style.display='none';
+  renderSidebar();
+  viewProfile(currentUser.name);
 }
 </script>
 </body>
