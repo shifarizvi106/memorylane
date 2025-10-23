@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Memory Lane - Discord Style</title>
 <style>
-  /* Discord-style dark theme */
+  /* ==================== Dark Theme / Discord Style ==================== */
   body {
     font-family: 'Segoe UI', sans-serif;
     background: #2f3136;
@@ -15,8 +15,6 @@
     height: 100vh;
     overflow: hidden;
   }
-  
-  /* Header */
   .app-header {
     background: #36393f;
     padding: 15px 20px;
@@ -37,13 +35,9 @@
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 0.9rem;
   }
-  .logout-btn:hover {
-    background: #da373c;
-  }
-  
-  /* Sidebar */
+  .logout-btn:hover { background: #da373c; }
+
   .sidebar {
     width: 220px;
     background: #202225;
@@ -69,14 +63,9 @@
     width: 100%;
     transition: background 0.2s;
   }
-  .friend-btn:hover {
-    background: #5865f2;
-  }
-  .friend-btn.active {
-    background: #5865f2;
-  }
-  
-  /* Main content */
+  .friend-btn:hover { background: #5865f2; }
+  .friend-btn.active { background: #5865f2; }
+
   .main-content {
     flex: 1;
     display: flex;
@@ -88,10 +77,7 @@
     border-bottom: 1px solid #36393f;
     background: #36393f;
   }
-  .profile-header h1 {
-    margin: 0 0 10px 0;
-    color: #ffffff;
-  }
+  .profile-header h1 { margin: 0 0 10px 0; color: #ffffff; }
   .bio-area {
     width: 100%;
     padding: 8px;
@@ -102,93 +88,7 @@
     resize: none;
     font-family: inherit;
   }
-  .posts-grid {
-    padding: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
-    gap: 20px;
-    flex: 1;
-    overflow-y: auto;
-  }
-  .post-card {
-    background: #36393f;
-    border-radius: 8px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.2s;
-  }
-  .post-card:hover {
-    transform: translateY(-2px);
-  }
-  .post-card img {
-    width: 100%;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    max-height: 300px;
-    object-fit: cover;
-  }
-  .post-caption {
-    margin-bottom: 8px;
-    line-height: 1.4;
-  }
-  .post-date {
-    font-size: 0.8rem;
-    color: #b9bbbe;
-    margin-bottom: 10px;
-  }
-  .post-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-  }
-  .btn {
-    background: #5865f2;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.2s;
-  }
-  .btn:hover {
-    background: #4752c4;
-  }
-  .btn-danger {
-    background: #f04747;
-  }
-  .btn-danger:hover {
-    background: #da373c;
-  }
-  .btn-success {
-    background: #43b581;
-  }
-  .btn-success:hover {
-    background: #3ca374;
-  }
-  .comment-input {
-    flex: 1;
-    padding: 6px;
-    border-radius: 5px;
-    border: none;
-    background: #40444b;
-    color: #dcddde;
-    font-family: inherit;
-  }
-  .comments {
-    margin-top: 10px;
-    font-size: 0.85rem;
-  }
-  .comment {
-    padding: 5px 0;
-    border-bottom: 1px solid #40444b;
-  }
-  .comment:last-child {
-    border-bottom: none;
-  }
+
   .upload-section {
     display: flex;
     gap: 10px;
@@ -208,19 +108,51 @@
     color: #dcddde;
     font-family: inherit;
   }
-  .upload-section input[type="file"] {
+  .upload-section input[type="file"] { flex: 1; min-width: 150px; }
+  .upload-section input[type="text"] { flex: 2; min-width: 200px; }
+
+  .posts-grid {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(280px,1fr));
+    gap: 20px;
     flex: 1;
-    min-width: 150px;
+    overflow-y: auto;
   }
-  .upload-section input[type="text"] {
-    flex: 2;
-    min-width: 200px;
+  .post-card {
+    background: #36393f;
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s;
   }
-  
-  /* Full screen overlay */
+  .post-card:hover { transform: translateY(-2px); }
+  .post-card img {
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    max-height: 300px;
+    object-fit: cover;
+  }
+  .post-caption { margin-bottom: 8px; line-height: 1.4; }
+  .post-date { font-size: 0.8rem; color: #b9bbbe; margin-bottom: 10px; }
+  .post-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .btn { background: #5865f2; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 0.9rem; transition: background 0.2s; }
+  .btn:hover { background: #4752c4; }
+  .btn-danger { background: #f04747; }
+  .btn-danger:hover { background: #da373c; }
+  .btn-success { background: #43b581; }
+  .btn-success:hover { background: #3ca374; }
+
+  .comment-input { flex: 1; padding: 6px; border-radius: 5px; border: none; background: #40444b; color: #dcddde; font-family: inherit; }
+  .comments { margin-top: 10px; font-size: 0.85rem; }
+  .comment { padding: 5px 0; border-bottom: 1px solid #40444b; }
+  .comment:last-child { border-bottom: none; }
+
   .overlay {
-    position: fixed;
-    top:0; left:0;
+    position: fixed; top:0; left:0;
     width:100%; height:100%;
     background: rgba(0,0,0,0.95);
     display:flex;
@@ -231,36 +163,12 @@
     padding: 20px;
     box-sizing: border-box;
   }
-  .overlay img {
-    max-width: 90%;
-    max-height: 70%;
-    border-radius: 10px;
-    object-fit: contain;
-  }
-  .overlay div {
-    color: #dcddde;
-    margin-top: 15px;
-    text-align: center;
-    font-size: 1.1rem;
-    max-width: 600px;
-  }
-  .close-overlay {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: #f04747;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-  
-  /* Login */
+  .overlay img { max-width: 90%; max-height: 70%; border-radius: 10px; object-fit: contain; }
+  .overlay div { color: #dcddde; margin-top: 15px; text-align: center; font-size: 1.1rem; max-width: 600px; }
+  .close-overlay { position: absolute; top: 20px; right: 20px; background: #f04747; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+
   #loginScreen {
-    position: fixed;
-    top:0; left:0;
+    position: fixed; top:0; left:0;
     width:100%; height:100%;
     background: #2f3136;
     display:flex;
@@ -276,10 +184,7 @@
     text-align: center;
     min-width: 300px;
   }
-  #loginScreen h2 {
-    color: #7289da;
-    margin-bottom: 20px;
-  }
+  #loginScreen h2 { color: #7289da; margin-bottom: 20px; }
   #loginScreen input {
     padding: 10px;
     margin: 8px 0;
@@ -303,40 +208,16 @@
     font-size: 1rem;
     transition: background 0.2s;
   }
-  #loginScreen button:hover {
-    background: #4752c4;
-  }
-  #loginError {
-    color: #f04747;
-    margin-top: 10px;
-    min-height: 20px;
-  }
+  #loginScreen button:hover { background: #4752c4; }
+  #loginError { color: #f04747; margin-top: 10px; min-height: 20px; }
 
-  /* Empty state */
-  .empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: #72767d;
-  }
-  .empty-state-icon {
-    font-size: 3rem;
-    margin-bottom: 15px;
-  }
+  .empty-state { text-align: center; padding: 40px 20px; color: #72767d; }
+  .empty-state-icon { font-size: 3rem; margin-bottom: 15px; }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #2f3136;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #202225;
-    border-radius: 4px;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #36393f;
-  }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #2f3136; }
+  ::-webkit-scrollbar-thumb { background: #202225; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #36393f; }
 </style>
 </head>
 <body>
@@ -363,7 +244,6 @@
   <div style="display:flex; flex:1; overflow:hidden;">
     <div class="sidebar" id="sidebar">
       <h2>Friends</h2>
-      <!-- Friend buttons will go here -->
     </div>
 
     <div class="main-content">
@@ -378,14 +258,13 @@
         <button id="uploadBtn" class="btn">Post Memory</button>
       </div>
       <div class="posts-grid" id="postsGrid">
-        <!-- Posts go here -->
       </div>
     </div>
   </div>
 </div>
 
 <script>
-// Initialize data
+// ======== Data ========
 let users = [
   {name:'Shifa', birthday:'10-06-2008', bio:'', id:1},
   {name:'Ritika', birthday:'06-07-2008', bio:'', id:2},
@@ -398,57 +277,26 @@ let users = [
   {name:'Ayaan', birthday:'16-01-2008', bio:'', id:9},
   {name:'Amrut', birthday:'20-09-2005', bio:'', id:10}
 ];
-
-let currentUser = null;
 let posts = [];
+let currentUser = null;
 
-// Load from localStorage
+// ======== Local Storage ========
 function loadData() {
-  try {
-    const savedPosts = localStorage.getItem('memoryLanePosts');
-    const savedUsers = localStorage.getItem('memoryLaneUsers');
-    const savedCurrentUser = localStorage.getItem('memoryLaneCurrentUser');
-    
-    if (savedPosts) posts = JSON.parse(savedPosts);
-    if (savedUsers) users = JSON.parse(savedUsers);
-    if (savedCurrentUser) currentUser = JSON.parse(savedCurrentUser);
-    
-    console.log('Loaded data:', { postsCount: posts.length, usersCount: users.length });
-  } catch (error) {
-    console.error('Error loading data:', error);
-    // Reset to default if corrupted
-    posts = [];
-    users = [
-      {name:'Shifa', birthday:'10-06-2008', bio:'', id:1},
-      {name:'Ritika', birthday:'06-07-2008', bio:'', id:2},
-      {name:'Vidhi', birthday:'12-11-2008', bio:'', id:3},
-      {name:'Saksham', birthday:'24-01-2009', bio:'', id:4},
-      {name:'Harshit', birthday:'23-01-2007', bio:'', id:5},
-      {name:'Sai', birthday:'04-03-2008', bio:'', id:6},
-      {name:'Juili', birthday:'25-05-2008', bio:'', id:7},
-      {name:'Kunal', birthday:'19-10-2008', bio:'', id:8},
-      {name:'Ayaan', birthday:'16-01-2008', bio:'', id:9},
-      {name:'Amrut', birthday:'20-09-2005', bio:'', id:10}
-    ];
-  }
-}
+  const savedPosts = localStorage.getItem('memoryLanePosts');
+  const savedUsers = localStorage.getItem('memoryLaneUsers');
+  const savedCurrentUser = localStorage.getItem('memoryLaneCurrentUser');
 
-// Save to localStorage
+  if (savedPosts) posts = JSON.parse(savedPosts);
+  if (savedUsers) users = JSON.parse(savedUsers);
+  if (savedCurrentUser) currentUser = JSON.parse(savedCurrentUser);
+}
 function saveData() {
-  try {
-    localStorage.setItem('memoryLanePosts', JSON.stringify(posts));
-    localStorage.setItem('memoryLaneUsers', JSON.stringify(users));
-    if (currentUser) {
-      localStorage.setItem('memoryLaneCurrentUser', JSON.stringify(currentUser));
-    }
-    console.log('Data saved successfully');
-  } catch (error) {
-    console.error('Error saving data:', error);
-    alert('Error saving data. The image might be too large.');
-  }
+  localStorage.setItem('memoryLanePosts', JSON.stringify(posts));
+  localStorage.setItem('memoryLaneUsers', JSON.stringify(users));
+  if (currentUser) localStorage.setItem('memoryLaneCurrentUser', JSON.stringify(currentUser));
 }
 
-// DOM Elements
+// ======== DOM Elements ========
 const sidebar = document.getElementById('sidebar');
 const profileName = document.getElementById('profileName');
 const bioInput = document.getElementById('bioInput');
@@ -462,354 +310,146 @@ const uploadBtn = document.getElementById('uploadBtn');
 const app = document.getElementById('app');
 const welcomeUser = document.getElementById('welcomeUser');
 
-// Initialize
 loadData();
 
+// ======== Login/Logout ========
 function login(){
   const username = document.getElementById('username').value.trim();
   const password = document.getElementById('password').value.trim();
-  
-  if (!username || !password) {
-    loginError.textContent = 'Please enter both username and birthday';
-    return;
-  }
-
-  const user = users.find(u => 
-    u.name.toLowerCase() === username.toLowerCase() && 
-    u.birthday === password
-  );
-  
+  if(!username||!password){ loginError.textContent='Please enter both'; return; }
+  const user = users.find(u=>u.name.toLowerCase()===username.toLowerCase() && u.birthday===password);
   if(user){
     currentUser = user;
     saveData();
     showApp();
-  } else {
-    loginError.textContent = 'Invalid username or birthday';
-  }
+  } else { loginError.textContent='Invalid username or birthday'; }
 }
-
-function logout() {
-  if (confirm('Are you sure you want to logout?')) {
-    currentUser = null;
+function logout(){
+  if(confirm('Are you sure you want to logout?')){
+    currentUser=null;
     localStorage.removeItem('memoryLaneCurrentUser');
-    app.style.display = 'none';
-    loginScreen.style.display = 'flex';
-    
-    // Reset login form
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-    loginError.textContent = '';
+    app.style.display='none';
+    loginScreen.style.display='flex';
+    document.getElementById('username').value='';
+    document.getElementById('password').value='';
+    loginError.textContent='';
   }
 }
 
-function showApp() {
-  loginScreen.style.display = 'none';
-  app.style.display = 'flex';
-  welcomeUser.textContent = currentUser.name;
+// ======== Show App ========
+function showApp(){
+  loginScreen.style.display='none';
+  app.style.display='flex';
+  welcomeUser.textContent=currentUser.name;
   renderSidebar();
   viewProfile(currentUser.name);
 }
-
 function renderSidebar(){
-  sidebar.innerHTML = '<h2>Friends</h2>';
-  users.forEach(user => {
-    const btn = document.createElement('button');
-    btn.className = 'friend-btn';
-    btn.textContent = user.name;
-    btn.onclick = () => {
-      // Remove active class from all buttons
-      document.querySelectorAll('.friend-btn').forEach(b => b.classList.remove('active'));
-      // Add active class to clicked button
-      btn.classList.add('active');
-      viewProfile(user.name);
-    };
+  sidebar.innerHTML='<h2>Friends</h2>';
+  users.forEach(user=>{
+    const btn=document.createElement('button');
+    btn.className='friend-btn';
+    btn.textContent=user.name;
+    btn.onclick=()=>{ document.querySelectorAll('.friend-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); viewProfile(user.name); };
     sidebar.appendChild(btn);
   });
 }
-
 function viewProfile(name){
-  const user = users.find(u => u.name === name);
-  if (!user) return;
+  const user=users.find(u=>u.name===name);
+  if(!user) return;
+  profileName.textContent=name+"'s Profile";
+  bioInput.value=user.bio||'';
+  bioInput.disabled=(name!==currentUser.name);
 
-  profileName.textContent = name + "'s Profile";
-  bioInput.value = user.bio || '';
-  bioInput.disabled = (name !== currentUser.name);
-
-  // Display posts for this user
-  const userPosts = posts.filter(p => p.user === name).sort((a, b) => b.id - a.id);
-  
-  postsGrid.innerHTML = '';
-  
-  if (userPosts.length === 0) {
-    postsGrid.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">📸</div>
-        <h3>No memories yet</h3>
-        <p>${name === currentUser.name ? 'Share your first memory!' : 'This user hasn\'t shared any memories yet.'}</p>
-      </div>
-    `;
+  const userPosts=posts.filter(p=>p.user===name).sort((a,b)=>b.id-a.id);
+  postsGrid.innerHTML='';
+  if(userPosts.length===0){
+    postsGrid.innerHTML=`<div class="empty-state"><div class="empty-state-icon">📸</div><h3>No memories yet</h3><p>${name===currentUser.name?'Share your first memory!':'This user hasn\'t shared any memories yet.'}</p></div>`;
     return;
   }
 
-  userPosts.forEach(post => {
-    const card = document.createElement('div');
-    card.className = 'post-card';
-    
-    const img = document.createElement('img');
-    img.src = post.image;
-    img.alt = post.caption;
-    img.onclick = () => openFullView(post.image, post.caption);
-    
-    const caption = document.createElement('div');
-    caption.className = 'post-caption';
-    caption.textContent = post.caption;
-    
-    const dateDiv = document.createElement('div');
-    dateDiv.className = 'post-date';
-    dateDiv.textContent = formatDate(post.date);
-    
-    const actions = document.createElement('div');
-    actions.className = 'post-actions';
-    
-    const likeBtn = document.createElement('button');
-    likeBtn.className = 'btn';
-    likeBtn.innerHTML = `❤️ ${post.likes || 0}`;
-    likeBtn.onclick = () => {
-      if (!post.likes) post.likes = 0;
-      post.likes++;
-      saveData();
-      viewProfile(name);
+  userPosts.forEach(post=>{
+    const card=document.createElement('div'); card.className='post-card';
+    const img=document.createElement('img'); img.src=post.image; img.alt=post.caption;
+    img.onclick=()=>openFullView(post.image, post.caption);
+    const caption=document.createElement('div'); caption.className='post-caption'; caption.textContent=post.caption;
+    const dateDiv=document.createElement('div'); dateDiv.className='post-date'; dateDiv.textContent=formatDate(post.date);
+    const actions=document.createElement('div'); actions.className='post-actions';
+
+    const likeBtn=document.createElement('button'); likeBtn.className='btn'; likeBtn.innerHTML=`❤️ ${post.likes||0}`;
+    likeBtn.onclick=()=>{
+      if(!post.likes) post.likes=0; post.likes++; saveData(); viewProfile(name);
     };
     actions.appendChild(likeBtn);
 
-    // Delete button (only for current user's posts)
-    if (post.user === currentUser.name) {
-      const delBtn = document.createElement('button');
-      delBtn.className = 'btn btn-danger';
-      delBtn.textContent = 'Delete';
-      delBtn.onclick = () => {
-        if (confirm('Are you sure you want to delete this memory?')) {
-          posts = posts.filter(p => p.id !== post.id);
-          saveData();
-          viewProfile(name);
-        }
-      };
+    if(post.user===currentUser.name){
+      const delBtn=document.createElement('button'); delBtn.className='btn btn-danger'; delBtn.textContent='Delete';
+      delBtn.onclick=()=>{ if(confirm('Delete this memory?')){ posts=posts.filter(p=>p.id!==post.id); saveData(); viewProfile(name); } };
       actions.appendChild(delBtn);
     }
 
-    // Comments section
-    const commentBox = document.createElement('div');
-    commentBox.style.display = 'flex';
-    commentBox.style.gap = '8px';
-    commentBox.style.marginTop = '10px';
-    
-    const commentInput = document.createElement('input');
-    commentInput.className = 'comment-input';
-    commentInput.placeholder = 'Add a comment...';
-    
-    const commentBtn = document.createElement('button');
-    commentBtn.className = 'btn btn-success';
-    commentBtn.textContent = 'Post';
-    commentBtn.onclick = () => {
-      if (!commentInput.value.trim()) return;
-      
-      if (!post.comments) post.comments = [];
-      post.comments.push({
-        user: currentUser.name,
-        text: commentInput.value.trim(),
-        date: new Date().toISOString()
-      });
-      
-      commentInput.value = '';
-      saveData();
-      viewProfile(name);
+    const commentBox=document.createElement('div'); commentBox.style.display='flex'; commentBox.style.gap='8px'; commentBox.style.marginTop='10px';
+    const commentInput=document.createElement('input'); commentInput.className='comment-input'; commentInput.placeholder='Add a comment...';
+    const commentBtn=document.createElement('button'); commentBtn.className='btn btn-success'; commentBtn.textContent='Post';
+    commentBtn.onclick=()=>{
+      if(!commentInput.value.trim()) return;
+      if(!post.comments) post.comments=[];
+      post.comments.push({user:currentUser.name,text:commentInput.value.trim(),date:new Date().toISOString()});
+      commentInput.value=''; saveData(); viewProfile(name);
     };
-    
-    commentBox.appendChild(commentInput);
-    commentBox.appendChild(commentBtn);
+    commentBox.appendChild(commentInput); commentBox.appendChild(commentBtn);
 
-    const commentsDiv = document.createElement('div');
-    commentsDiv.className = 'comments';
-    
-    if (post.comments && post.comments.length > 0) {
-      post.comments.forEach(comment => {
-        const commentDiv = document.createElement('div');
-        commentDiv.className = 'comment';
-        commentDiv.innerHTML = `
-          <strong>${comment.user}</strong>: ${comment.text}
-          <div style="font-size: 0.7rem; color: #72767d;">${formatDate(comment.date)}</div>
-        `;
+    const commentsDiv=document.createElement('div'); commentsDiv.className='comments';
+    if(post.comments&&post.comments.length>0){
+      post.comments.forEach(comment=>{
+        const commentDiv=document.createElement('div'); commentDiv.className='comment';
+        commentDiv.innerHTML=`<strong>${comment.user}</strong>: ${comment.text}<div style="font-size:0.7rem;color:#72767d;">${formatDate(comment.date)}</div>`;
         commentsDiv.appendChild(commentDiv);
       });
     }
 
-    // Add all elements to card
-    card.appendChild(img);
-    card.appendChild(caption);
-    card.appendChild(dateDiv);
-    card.appendChild(actions);
-    card.appendChild(commentBox);
-    card.appendChild(commentsDiv);
-
+    card.appendChild(img); card.appendChild(caption); card.appendChild(dateDiv); card.appendChild(actions); card.appendChild(commentBox); card.appendChild(commentsDiv);
     postsGrid.appendChild(card);
   });
 }
 
-// Save bio with debounce
-let bioTimeout;
-bioInput.addEventListener('input', () => {
-  if (!currentUser) return;
-  
+// ======== Bio Save ========
+let bioTimeout; bioInput.addEventListener('input',()=>{
+  if(!currentUser) return;
   clearTimeout(bioTimeout);
-  bioTimeout = setTimeout(() => {
-    currentUser.bio = bioInput.value;
-    users = users.map(u => u.name === currentUser.name ? currentUser : u);
-    saveData();
-  }, 500);
+  bioTimeout=setTimeout(()=>{ currentUser.bio=bioInput.value; saveData(); renderSidebar(); },500);
 });
 
-// Upload post with image compression
-uploadBtn.onclick = () => {
-  const file = imageUpload.files[0];
-  if (!file) {
-    alert('Please select an image');
-    return;
-  }
-  
-  // Check file size (max 5MB)
-  if (file.size > 5 * 1024 * 1024) {
-    alert('Image too large! Please select an image smaller than 5MB.');
-    return;
-  }
-  
-  const caption = captionInput.value.trim();
-  if (!caption) {
-    alert('Please add a caption');
-    return;
-  }
-  
-  const date = memoryDate.value || new Date().toISOString().split('T')[0];
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const post = {
-        id: Date.now(),
-        user: currentUser.name,
-        image: e.target.result,
-        caption: caption,
-        date: date,
-        likes: 0,
-        comments: []
-      };
-      
-      posts.push(post);
-      saveData();
-      viewProfile(currentUser.name);
-      
-      // Reset form
-      imageUpload.value = '';
-      captionInput.value = '';
-      memoryDate.value = new Date().toISOString().split('T')[0];
-      
-    } catch (error) {
-      console.error('Error creating post:', error);
-      alert('Error creating post. The image might be too large.');
-    }
+// ======== Upload Memory ========
+uploadBtn.onclick=()=>{
+  if(!imageUpload.files[0]) { alert('Select an image'); return; }
+  const reader=new FileReader();
+  reader.onload=function(e){
+    posts.push({id:Date.now(), user:currentUser.name, image:e.target.result, caption:captionInput.value, date:memoryDate.value || new Date().toISOString(), likes:0, comments:[]});
+    captionInput.value=''; imageUpload.value=''; memoryDate.value='';
+    saveData(); viewProfile(currentUser.name);
   };
-  
-  reader.onerror = function() {
-    alert('Error reading the image file. Please try another image.');
-  };
-  
-  reader.readAsDataURL(file);
+  reader.readAsDataURL(imageUpload.files[0]);
 };
 
-// Set today's date as default
-memoryDate.value = new Date().toISOString().split('T')[0];
-
-function formatDate(dateString) {
-  if (!dateString) return 'Unknown date';
-  
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) {
-    return dateString;
-  }
-  
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-}
-
-function openFullView(src, caption) {
-  const overlay = document.createElement('div');
-  overlay.className = 'overlay';
-  
-  const closeBtn = document.createElement('button');
-  closeBtn.className = 'close-overlay';
-  closeBtn.textContent = '✕';
-  closeBtn.onclick = () => overlay.remove();
-  
-  const img = document.createElement('img');
-  img.src = src;
-  img.alt = caption;
-  
-  const cap = document.createElement('div');
-  cap.textContent = caption;
-  
-  overlay.appendChild(closeBtn);
-  overlay.appendChild(img);
-  overlay.appendChild(cap);
-  
-  // Close on overlay click (but not on image/content click)
-  overlay.onclick = (e) => {
-    if (e.target === overlay) overlay.remove();
-  };
-  
-  // Close on ESC key
-  const escHandler = (e) => {
-    if (e.key === 'Escape') overlay.remove();
-  };
-  document.addEventListener('keydown', escHandler);
-  
-  // Cleanup event listener when overlay is removed
-  overlay.addEventListener('remove', () => {
-    document.removeEventListener('keydown', escHandler);
-  });
-  
+// ======== Full View ========
+function openFullView(src, caption){
+  const overlay=document.createElement('div'); overlay.className='overlay';
+  overlay.innerHTML=`<img src="${src}"><div>${caption||''}</div><button class="close-overlay" onclick="this.parentElement.remove()">Close</button>`;
+  overlay.onclick=e=>{ if(e.target===overlay) overlay.remove(); };
   document.body.appendChild(overlay);
 }
 
-// Initialize on load
-if (currentUser) {
-  showApp();
+// ======== Format Date ========
+function formatDate(d){
+  const date=new Date(d);
+  if(isNaN(date)) return d;
+  return date.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
 }
 
-// Add keyboard support
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    const overlay = document.querySelector('.overlay');
-    if (overlay) overlay.remove();
-  }
-});
-
-// Clear all data (for testing)
-function clearAllData() {
-  if (confirm('Clear ALL data? This cannot be undone!')) {
-    localStorage.clear();
-    location.reload();
-  }
-}
-
-// Debug function to check storage
-function checkStorage() {
-  console.log('Posts:', posts);
-  console.log('Users:', users);
-  console.log('Current user:', currentUser);
-  console.log('LocalStorage usage:', JSON.stringify(localStorage).length, 'characters');
-}
+// ======== Auto Login if Already Logged In ========
+if(currentUser){ showApp(); }
 </script>
+
 </body>
 </html>
