@@ -3,198 +3,269 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Memory Lane</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<title>Memory Lane Dashboard</title>
 <style>
-:root {
-    --primary: #8B5CF6;
-    --secondary: #FFFFFF;
-    --text: #1E293B;
-    --text-light: #64748B;
-    --border: #E2E8F0;
-    --radius: 12px;
-    --gradient: linear-gradient(135deg,#8B5CF6 0%,#EC4899 100%);
-    --shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f2f2f7;
+  margin: 0;
+  padding: 0;
 }
-.dark-mode { --primary:#A78BFA; --secondary:#0F172A; --text:#F1F5F9; --text-light:#94A3B8; --border:#334155; --shadow:0 10px 25px -5px rgba(0,0,0,0.3); }
+header {
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  padding: 15px 30px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  padding: 30px;
+}
+#loginPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+#loginPage input {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 220px;
+}
+#loginPage button {
+  padding: 10px 20px;
+  background: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#loginPage button:hover { background: #5148e5; }
 
-body { font-family:'Inter',sans-serif; background:var(--secondary); color:var(--text); margin:0; padding:0; transition:all 0.3s ease; }
-.container { max-width:1200px; margin:0 auto; padding:0 20px; }
-header { background:var(--secondary); border-bottom:1px solid var(--border); padding:16px 0; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:1000; box-shadow:var(--shadow); }
-.logo { font-size:1.5rem; font-weight:700; background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-.toggle { position:relative; display:inline-block; width:50px; height:24px; margin-left:10px; }
-.toggle input { opacity:0; width:0; height:0; }
-.slider { position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:var(--border); transition:.4s; border-radius:24px; }
-.slider:before { position:absolute; content:""; height:16px; width:16px; left:4px; bottom:4px; background:white; transition:.4s; border-radius:50%; }
-input:checked + .slider { background:var(--primary); }
-input:checked + .slider:before { transform:translateX(26px); }
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+.profile img {
+  width: 80px; height: 80px; border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #6c63ff;
+}
+.profile-info h2 { margin: 0; }
+.profile-info p { margin: 4px 0; color: #555; }
 
-.main-content { display:grid; grid-template-columns:300px 1fr; gap:30px; padding:40px 0; min-height:calc(100vh-80px); }
-.sidebar { background:var(--secondary); border:1px solid var(--border); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow); }
-.sidebar-section { margin-bottom:25px; }
-.sidebar-section h3 { margin-bottom:15px; font-size:1.1rem; color:var(--primary); display:flex; align-items:center; gap:8px; }
-.friends-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:15px; }
-.friend-card { background:var(--secondary); border:1px solid var(--border); border-radius:var(--radius); padding:15px; text-align:center; cursor:pointer; transition:all 0.3s ease; position:relative; }
-.friend-card:hover { transform:translateY(-3px); box-shadow:var(--shadow); border-color:var(--primary);}
-.friend-avatar { width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.2rem; margin:0 auto 10px; background:var(--primary); color:white; overflow:hidden;}
-.friend-name { font-weight:600; margin-bottom:5px; }
-.friend-stats { font-size:0.8rem; color:var(--text-light);}
-.avatar-upload { position:absolute; bottom:5px; right:5px; font-size:0.8rem; }
+.friends-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+.friend {
+  background: #f7f7ff;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.friend:hover { background: #ececff; }
 
-.page { display:none; }
-.page.active { display:block; }
-.timeline-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; flex-wrap:wrap; }
-.btn { padding:12px 24px; border:none; border-radius:var(--radius); cursor:pointer; font-weight:600; font-size:1rem; display:inline-flex; align-items:center; gap:8px; transition:all 0.3s ease; }
-.btn-primary { background:var(--gradient); color:white; }
-.btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(139,92,246,0.4); }
+.post-form {
+  margin-bottom: 30px;
+}
+.post-form input[type="file"], .post-form input[type="text"] {
+  display: block;
+  margin-bottom: 10px;
+}
+.post-form button {
+  background: #6c63ff;
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.post-form button:hover { background: #5148e5; }
 
-#memoryMap { height:500px; border-radius:var(--radius); margin-top:20px; }
-.login-container { display:flex; flex-direction:column; justify-content:center; align-items:center; height:80vh; }
-.login-container input { padding:12px; margin:10px 0; border-radius:var(--radius); border:1px solid var(--border); width:200px; }
-.login-container button { width:200px; }
-@media(max-width:1024px){ .main-content{grid-template-columns:1fr;} .friends-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));} }
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+.post {
+  background: #fafafa;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.post img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+.post p {
+  padding: 10px;
+  font-size: 0.9rem;
+}
+.delete-btn {
+  background: crimson;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
-
 <header>
-    <div class="logo">🕒 Memory Lane</div>
-    <div class="header-actions">
-        <label class="toggle">
-            <input type="checkbox" id="darkModeToggle">
-            <span class="slider"></span>
-        </label>
-        <span>Dark Mode</span>
-    </div>
+  <div>📸 Memory Lane</div>
+  <div id="userWelcome"></div>
 </header>
 
-<div class="container">
-
-<div id="loginPage" class="login-container">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Name (e.g., Ritika)">
-    <input type="password" id="password" placeholder="Birthday YYYY-MM-DD">
-    <button class="btn btn-primary" id="loginBtn">Login</button>
-    <p id="loginError" style="color:red;"></p>
+<div id="loginPage">
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Name (e.g. Ritika)">
+  <input type="password" id="password" placeholder="Birthday (YYYY-MM-DD)">
+  <button id="loginBtn">Login</button>
+  <p id="loginError" style="color:red;"></p>
 </div>
 
-<div id="appContent" style="display:none;">
-<div class="main-content">
-
-<!-- Sidebar -->
-<div class="sidebar">
-    <div class="sidebar-section">
-        <h3>👥 Your Friends</h3>
-        <div class="friends-grid" id="friendsGrid"></div>
+<div class="container" id="dashboard" style="display:none;">
+  <div class="profile">
+    <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile">
+    <div class="profile-info">
+      <h2 id="profileName"></h2>
+      <p id="profileBirthday"></p>
     </div>
-    <div class="sidebar-section">
-        <h3>🎂 Upcoming Birthdays</h3>
-        <div id="upcomingBirthdays"><p style="color: var(--text-light); font-size:0.9rem;">No upcoming birthdays</p></div>
-    </div>
+  </div>
+
+  <div class="friends-list" id="friendsList"></div>
+
+  <div class="post-form" id="postForm">
+    <h3>Create a New Post</h3>
+    <input type="file" id="postImage" accept="image/*">
+    <input type="text" id="postCaption" placeholder="Write a caption...">
+    <button id="uploadBtn">Upload Post</button>
+  </div>
+
+  <div class="posts-grid" id="postsGrid"></div>
 </div>
 
-<!-- Pages -->
-<div class="pages-container">
-    <div id="timeline" class="page active">
-        <div class="timeline-header">
-            <h1>Memory Timeline</h1>
-            <button class="btn btn-primary">➕ Add Memory</button>
-        </div>
-        <p>Here you will see memories...</p>
-    </div>
-    <div id="map" class="page">
-        <div class="timeline-header"><h1>Memory Map</h1></div>
-        <div id="memoryMap"></div>
-    </div>
-</div>
-
-</div>
-</div>
-</div>
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// Dark mode
-const toggle=document.getElementById('darkModeToggle');
-toggle.addEventListener('change',()=>document.body.classList.toggle('dark-mode',toggle.checked));
-
-// Friends Data
-const friends=[
-    {name:'Ritika', birthday:'2008-07-06'},
-    {name:'Vidhi', birthday:'2008-11-12'},
-    {name:'Saksham', birthday:'2009-01-24'},
-    {name:'Harshit', birthday:'2007-01-23'},
-    {name:'Sai', birthday:'2008-03-04'},
-    {name:'Juili', birthday:'2008-05-25'},
-    {name:'Kunal', birthday:'2008-10-19'},
-    {name:'Ayaan', birthday:'2008-01-16'},
-    {name:'Amrut', birthday:'2005-09-20'},
-    {name:'Shifa', birthday:'2008-06-10'}
+const friends = [
+  { name: 'Ritika', birthday: '2008-07-06' },
+  { name: 'Vidhi', birthday: '2008-11-12' },
+  { name: 'Saksham', birthday: '2009-01-24' },
+  { name: 'Harshit', birthday: '2007-01-23' },
+  { name: 'Sai', birthday: '2008-03-04' },
+  { name: 'Juili', birthday: '2008-05-25' },
+  { name: 'Kunal', birthday: '2008-10-19' },
+  { name: 'Ayaan', birthday: '2008-01-16' },
+  { name: 'Amrut', birthday: '2005-09-20' },
+  { name: 'Shifa', birthday: '2008-06-10' }
 ];
 
-// Login
-const loginBtn=document.getElementById('loginBtn');
-loginBtn.addEventListener('click',()=>{
-    const user=document.getElementById('username').value.trim();
-    const pass=document.getElementById('password').value.trim();
-    const found=friends.find(f=>f.name.toLowerCase()===user.toLowerCase() && f.birthday===pass);
-    if(found){
-        document.getElementById('loginPage').style.display='none';
-        document.getElementById('appContent').style.display='block';
-        loadFriends(found.name);
-    } else{
-        document.getElementById('loginError').textContent='Invalid name or birthday!';
-    }
+let currentUser = null;
+
+// Login System
+document.getElementById("loginBtn").addEventListener("click", () => {
+  const user = document.getElementById("username").value.trim();
+  const pass = document.getElementById("password").value.trim();
+  const found = friends.find(f => f.name.toLowerCase() === user.toLowerCase() && f.birthday === pass);
+  
+  if (found) {
+    currentUser = found.name;
+    localStorage.setItem("loggedInUser", currentUser);
+    showDashboard(found);
+  } else {
+    document.getElementById("loginError").textContent = "Invalid name or birthday!";
+  }
 });
 
-function loadFriends(loggedInUser){
-    const friendsGrid=document.getElementById('friendsGrid');
-    const upcomingBirthdays=document.getElementById('upcomingBirthdays');
-    friendsGrid.innerHTML='';
-    upcomingBirthdays.innerHTML='';
-
-    const today=new Date();
-    friends.forEach((f,i)=>{
-        if(f.name===loggedInUser) return; // skip self
-        const div=document.createElement('div');
-        div.className='friend-card';
-        div.innerHTML=`
-            <div class="friend-avatar" id="avatar-${i}">${f.name[0]}</div>
-            <div class="friend-name">${f.name}</div>
-            <div class="friend-stats">Birthday: ${new Date(f.birthday).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div>
-            <input type="file" accept="image/*" class="avatar-upload" id="upload-${i}" title="Upload Picture">
-        `;
-        friendsGrid.appendChild(div);
-
-        // Load saved avatar
-        const saved=localStorage.getItem(`avatar-${i}`);
-        if(saved) document.getElementById(`avatar-${i}`).style.backgroundImage=`url(${saved})`;
-
-        document.getElementById(`upload-${i}`).addEventListener('change',(e)=>{
-            const file=e.target.files[0];
-            if(file){
-                const reader=new FileReader();
-                reader.onload=()=>{
-                    document.getElementById(`avatar-${i}`).style.backgroundImage=`url(${reader.result})`;
-                    document.getElementById(`avatar-${i}`).textContent='';
-                    localStorage.setItem(`avatar-${i}`,reader.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Upcoming birthdays
-        const b=new Date(f.birthday); b.setFullYear(today.getFullYear());
-        const diff=(b-today)/(1000*60*60*24);
-        if(diff>=0 && diff<=30){
-            const p=document.createElement('p');
-            p.style.color='var(--text)';
-            p.style.fontSize='0.9rem';
-            p.textContent=`${f.name} - ${b.toLocaleDateString('en-GB',{day:'numeric',month:'short'})}`;
-            upcomingBirthdays.appendChild(p);
-        }
-    });
+function showDashboard(user) {
+  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+  document.getElementById("userWelcome").textContent = `Welcome, ${user.name}!`;
+  document.getElementById("profileName").textContent = user.name;
+  document.getElementById("profileBirthday").textContent = "Birthday: " + user.birthday;
+  loadFriends(user.name);
+  loadPosts(user.name);
 }
+
+function loadFriends(currentName) {
+  const list = document.getElementById("friendsList");
+  list.innerHTML = "<h3>Friends</h3>";
+  friends.forEach(friend => {
+    if (friend.name !== currentName) {
+      const div = document.createElement("div");
+      div.classList.add("friend");
+      div.textContent = friend.name;
+      div.addEventListener("click", () => viewProfile(friend));
+      list.appendChild(div);
+    }
+  });
+}
+
+function viewProfile(friend) {
+  document.getElementById("profileName").textContent = friend.name;
+  document.getElementById("profileBirthday").textContent = "Birthday: " + friend.birthday;
+  document.getElementById("postsGrid").innerHTML = "";
+  loadPosts(friend.name, true);
+}
+
+function loadPosts(user, viewOnly = false) {
+  const grid = document.getElementById("postsGrid");
+  const posts = JSON.parse(localStorage.getItem(`${user}_posts`) || "[]");
+  grid.innerHTML = "";
+  posts.forEach((post, index) => {
+    const div = document.createElement("div");
+    div.classList.add("post");
+    div.innerHTML = `
+      <img src="${post.image}" alt="Post">
+      <p>${post.caption}</p>
+      ${!viewOnly ? `<button class="delete-btn" onclick="deletePost('${user}', ${index})">Delete</button>` : ""}
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function deletePost(user, index) {
+  const posts = JSON.parse(localStorage.getItem(`${user}_posts`) || "[]");
+  posts.splice(index, 1);
+  localStorage.setItem(`${user}_posts`, JSON.stringify(posts));
+  loadPosts(user);
+}
+
+document.getElementById("uploadBtn").addEventListener("click", () => {
+  const file = document.getElementById("postImage").files[0];
+  const caption = document.getElementById("postCaption").value.trim();
+  if (!file) return alert("Please choose an image!");
+  
+  const reader = new FileReader();
+  reader.onload = () => {
+    const posts = JSON.parse(localStorage.getItem(`${currentUser}_posts`) || "[]");
+    posts.push({ image: reader.result, caption });
+    localStorage.setItem(`${currentUser}_posts`, JSON.stringify(posts));
+    document.getElementById("postImage").value = "";
+    document.getElementById("postCaption").value = "";
+    loadPosts(currentUser);
+  };
+  reader.readAsDataURL(file);
+});
 </script>
 </body>
 </html>
