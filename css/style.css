@@ -1,260 +1,172 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Login Page Styles */
-.login-page {
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
 .login-container {
-  background-color: white;
-  border-radius: 16px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  padding: 40px;
-  width: 100%;
-  max-width: 450px;
-  text-align: center;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
 }
 
 .logo {
-  font-size: 48px;
-  margin-bottom: 20px;
-  color: #6a11cb;
+    font-size: 50px;
+    margin-bottom: 20px;
 }
 
-.login-container h2 {
-  color: #333;
-  margin-bottom: 10px;
-  font-weight: 600;
+h2 {
+    color: #333;
+    margin-bottom: 10px;
 }
 
 .subtitle {
-  color: #666;
-  margin-bottom: 30px;
-  font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
 }
 
 .input-group {
-  margin-bottom: 20px;
-  text-align: left;
+    margin-bottom: 20px;
 }
 
-label {
-  display: block;
-  margin-bottom: 8px;
-  color: #555;
-  font-weight: 500;
+input, textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e1e5e9;
+    border-radius: 10px;
+    font-size: 16px;
+    margin-bottom: 15px;
 }
 
-input {
-  width: 100%;
-  padding: 15px;
-  border: 2px solid #e1e1e1;
-  border-radius: 10px;
-  font-size: 16px;
-  transition: all 0.3s;
-}
-
-input:focus {
-  border-color: #6a11cb;
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #667eea;
 }
 
 button {
-  width: 100%;
-  padding: 15px;
-  background: linear-gradient(to right, #6a11cb, #2575fc);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  margin-top: 10px;
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
 }
 
 button:hover {
-  background: linear-gradient(to right, #5a0db9, #1c68e6);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
 }
 
-.error-message {
-  color: #e74c3c;
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #ffeaea;
-  border-radius: 8px;
-  display: none;
-}
-
-.footer {
-  margin-top: 25px;
-  color: #777;
-  font-size: 14px;
+.error {
+    color: #e74c3c;
+    margin-top: 15px;
+    display: none;
 }
 
 /* Feed Page Styles */
 .feed-page {
-  background-color: #f5f7fa;
-  min-height: 100vh;
+    background: #f8f9fa;
+    min-height: 100vh;
 }
 
 header {
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  color: white;
-  padding: 15px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: white;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .user-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 #logoutBtn {
-  width: auto;
-  padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+    width: auto;
+    padding: 10px 20px;
 }
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px 20px;
 }
 
 .upload-section {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
 .upload-section h3 {
-  margin-bottom: 15px;
-  color: #444;
+    margin-bottom: 20px;
+    color: #333;
 }
 
-.upload-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.image-preview {
-  max-width: 100%;
-  max-height: 200px;
-  margin-top: 10px;
-  border-radius: 8px;
-  display: none;
-}
-
-textarea {
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-  resize: vertical;
-  min-height: 80px;
-}
-
-.char-counter {
-  text-align: right;
-  font-size: 14px;
-  color: #777;
-  margin-top: 5px;
+#uploadForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .feed {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .memory-card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-
-.memory-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
 .memory-image {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  display: block;
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
 }
 
 .memory-content {
-  padding: 15px;
+    padding: 20px;
 }
 
 .memory-caption {
-  margin-bottom: 10px;
-  font-size: 16px;
+    margin-bottom: 10px;
+    font-size: 16px;
 }
 
 .memory-date {
-  color: #777;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+    color: #666;
+    font-size: 14px;
 }
 
 .empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  color: #777;
-  grid-column: 1 / -1;
-}
-
-.empty-state h3 {
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-@media (max-width: 768px) {
-  .feed {
-    grid-template-columns: 1fr;
-  }
-  
-  .container {
-    padding: 15px;
-  }
-  
-  header {
-    flex-direction: column;
-    gap: 10px;
     text-align: center;
-  }
+    padding: 60px 20px;
+    color: #666;
 }
