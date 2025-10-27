@@ -2,19 +2,219 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Memory Lane - Login</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .login-container:hover {
+      transform: translateY(-5px);
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    .logo {
+      font-size: 48px;
+      margin-bottom: 20px;
+      color: #6a11cb;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #e1e1e1;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      border-color: #6a11cb;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #5a0db9, #1c68e6);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .error-message {
+      color: #e74c3c;
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #ffeaea;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .hint {
+      font-size: 14px;
+      color: #888;
+      margin-top: 5px;
+      text-align: left;
+    }
+
+    .footer {
+      margin-top: 25px;
+      color: #777;
+      font-size: 14px;
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 30px 20px;
+      }
+      
+      h2 {
+        font-size: 22px;
+      }
+    }
+  </style>
 </head>
-<body class="login-page">
+<body>
   <div class="login-container">
+    <div class="logo">🕒</div>
     <h2>Welcome to Memory Lane</h2>
+    <p class="subtitle">Your personal digital memory keeper</p>
+    
     <form id="loginForm">
-      <input type="text" id="username" placeholder="Your name (e.g., Shifa)" required>
-      <input type="text" id="password" placeholder="Your birthday (e.g., 10th June 2008)" required>
-      <button type="submit">Log in</button>
+      <div class="input-group">
+        <label for="username">Your Name</label>
+        <input type="text" id="username" placeholder="e.g., Shifa" required>
+      </div>
+      
+      <div class="input-group">
+        <label for="password">Your Birthday</label>
+        <input type="text" id="password" placeholder="e.g., 10th June 2008" required>
+        <p class="hint">Enter your birthday in any format you prefer</p>
+      </div>
+      
+      <button type="submit">Log in to Your Memories</button>
     </form>
+    
+    <div id="errorMessage" class="error-message">
+      Please check your name and birthday and try again.
+    </div>
+    
+    <div class="footer">
+      Your memories are securely stored and private.
+    </div>
   </div>
 
-  <script src="auth.js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorMessage = document.getElementById('errorMessage');
+      
+      // Basic validation
+      if (!username || !password) {
+        errorMessage.textContent = 'Please enter both your name and birthday.';
+        errorMessage.style.display = 'block';
+        return;
+      }
+      
+      if (username.length < 2) {
+        errorMessage.textContent = 'Please enter a valid name (at least 2 characters).';
+        errorMessage.style.display = 'block';
+        return;
+      }
+      
+      // If validation passes
+      errorMessage.style.display = 'none';
+      
+      // In a real application, you would send this data to a server
+      // For demonstration, we'll simulate a successful login
+      console.log('Login attempt:', { username, password });
+      
+      // Show loading state
+      const submitButton = document.querySelector('button[type="submit"]');
+      const originalText = submitButton.textContent;
+      submitButton.textContent = 'Logging in...';
+      submitButton.disabled = true;
+      
+      // Simulate API call
+      setTimeout(() => {
+        // For demo purposes, we'll consider any non-empty values as valid
+        alert(`Welcome back, ${username}! Redirecting to your memories...`);
+        
+        // Reset button
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
+        
+        // In a real app, you would redirect to the main application
+        // window.location.href = 'main-app.html';
+      }, 1500);
+    });
+  </script>
 </body>
 </html>
