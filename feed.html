@@ -2,17 +2,365 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Memory Lane - Feed</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header h2 {
+      font-weight: 600;
+      font-size: 24px;
+    }
+
+    #logoutBtn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    #logoutBtn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .upload-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .upload-section h3 {
+      margin-bottom: 15px;
+      color: #444;
+    }
+
+    .upload-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    input, textarea {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #6a11cb;
+    }
+
+    #imageUpload {
+      padding: 8px;
+    }
+
+    #uploadBtn {
+      background: linear-gradient(to right, #6a11cb, #2575fc);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    #uploadBtn:hover {
+      background: linear-gradient(to right, #5a0db9, #1c68e6);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #uploadBtn:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .feed {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .memory-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .memory-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .memory-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .memory-content {
+      padding: 15px;
+    }
+
+    .memory-caption {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .memory-date {
+      color: #777;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #777;
+    }
+
+    .empty-state h3 {
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .empty-state p {
+      max-width: 500px;
+      margin: 0 auto 20px;
+    }
+
+    .image-preview {
+      max-width: 100%;
+      max-height: 200px;
+      margin-top: 10px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .char-counter {
+      text-align: right;
+      font-size: 14px;
+      color: #777;
+      margin-top: 5px;
+    }
+
+    @media (max-width: 768px) {
+      .feed {
+        grid-template-columns: 1fr;
+      }
+      
+      .container {
+        padding: 15px;
+      }
+    }
+  </style>
 </head>
-<body class="feed-page">
+<body>
   <header>
     <h2>Memory Lane</h2>
     <button id="logoutBtn">Logout</button>
   </header>
 
-  <main id="feed"></main>
+  <div class="container">
+    <section class="upload-section">
+      <h3>Share a Memory</h3>
+      <form class="upload-form" id="uploadForm">
+        <div class="form-group">
+          <label for="imageUpload">Select Image</label>
+          <input type="file" id="imageUpload" accept="image/*" required>
+          <img id="imagePreview" class="image-preview" alt="Image preview">
+        </div>
+        
+        <div class="form-group">
+          <label for="captionInput">Caption</label>
+          <textarea id="captionInput" placeholder="What's the story behind this memory?" rows="3" maxlength="300"></textarea>
+          <div class="char-counter"><span id="charCount">0</span>/300</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="memoryDate">Date of Memory</label>
+          <input type="date" id="memoryDate" required>
+        </div>
+        
+        <button type="submit" id="uploadBtn">Post Memory</button>
+      </form>
+    </section>
 
-  <script src="feed.js"></script>
+    <section class="feed" id="feed">
+      <div class="empty-state" id="emptyState">
+        <h3>No memories yet</h3>
+        <p>Share your first memory by uploading a photo above!</p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const uploadForm = document.getElementById('uploadForm');
+      const feed = document.getElementById('feed');
+      const emptyState = document.getElementById('emptyState');
+      const imageUpload = document.getElementById('imageUpload');
+      const imagePreview = document.getElementById('imagePreview');
+      const captionInput = document.getElementById('captionInput');
+      const charCount = document.getElementById('charCount');
+      const memoryDate = document.getElementById('memoryDate');
+      const logoutBtn = document.getElementById('logoutBtn');
+      
+      // Set today's date as default
+      memoryDate.valueAsDate = new Date();
+      
+      // Character counter for caption
+      captionInput.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+      });
+      
+      // Image preview
+      imageUpload.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+          const reader = new FileReader();
+          
+          reader.onload = function(e) {
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block';
+          }
+          
+          reader.readAsDataURL(this.files[0]);
+        }
+      });
+      
+      // Handle form submission
+      uploadForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const imageFile = imageUpload.files[0];
+        const caption = captionInput.value.trim();
+        const date = memoryDate.value;
+        
+        if (!imageFile) {
+          alert('Please select an image to upload.');
+          return;
+        }
+        
+        if (!caption) {
+          alert('Please add a caption for your memory.');
+          return;
+        }
+        
+        // Create memory object
+        const memory = {
+          id: Date.now(),
+          image: URL.createObjectURL(imageFile),
+          caption: caption,
+          date: formatDate(date),
+          timestamp: new Date().toLocaleString()
+        };
+        
+        // Add memory to feed
+        addMemoryToFeed(memory);
+        
+        // Reset form
+        uploadForm.reset();
+        imagePreview.style.display = 'none';
+        charCount.textContent = '0';
+        memoryDate.valueAsDate = new Date();
+        
+        // Hide empty state if it's the first memory
+        if (emptyState.style.display !== 'none') {
+          emptyState.style.display = 'none';
+        }
+      });
+      
+      // Logout button
+      logoutBtn.addEventListener('click', function() {
+        if (confirm('Are you sure you want to logout?')) {
+          alert('Logged out successfully!');
+          // In a real app, you would redirect to login page
+          // window.location.href = 'login.html';
+        }
+      });
+      
+      // Helper function to format date
+      function formatDate(dateString) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+      }
+      
+      // Function to add memory to feed
+      function addMemoryToFeed(memory) {
+        const memoryCard = document.createElement('div');
+        memoryCard.className = 'memory-card';
+        memoryCard.innerHTML = `
+          <img src="${memory.image}" alt="Memory image" class="memory-image">
+          <div class="memory-content">
+            <p class="memory-caption">${memory.caption}</p>
+            <div class="memory-date">
+              <span>📅</span> ${memory.date}
+            </div>
+          </div>
+        `;
+        
+        // Add to the beginning of the feed
+        feed.insertBefore(memoryCard, feed.firstChild);
+      }
+    });
+  </script>
 </body>
 </html>
