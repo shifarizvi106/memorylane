@@ -1,44 +1,36 @@
-const loginBtn = document.getElementById('loginBtn');
-const logoutBtn = document.getElementById('logoutBtn');
-const loginError = document.getElementById('loginError');
-const loginScreen = document.getElementById('loginScreen');
-const appDiv = document.getElementById('app');
-const welcomeUser = document.getElementById('welcomeUser');
-
-loginBtn.onclick = async ()=>{
+// auth.js
+document.getElementById('loginForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  
   const name = document.getElementById('username').value.trim();
   const birthday = document.getElementById('password').value.trim();
-  if(!name || !birthday){ loginError.textContent='Enter username & birthday'; return; }
 
-  const res = await fetch(`${API_BASE}/login`, {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({name, birthday})
-  });
+  const users = [
+    { name: "Ritika", birthday: "6th July 2008" },
+    { name: "Vidhi", birthday: "12th November 2008" },
+    { name: "Saksham", birthday: "24th January 2009" },
+    { name: "Harshit", birthday: "23rd January 2007" },
+    { name: "Sai", birthday: "4th March 2008" },
+    { name: "Juili", birthday: "25th May 2008" },
+    { name: "Kunal", birthday: "19th October 2008" },
+    { name: "Ayaan", birthday: "16th January 2008" },
+    { name: "Amrut", birthday: "20th September 2005" },
+    { name: "Shifa", birthday: "10th June 2008" }
+  ];
 
-  const data = await res.json();
-  if(data.success){
-    currentUser = data.user;
-    localStorage.setItem('memoryLaneUser', JSON.stringify(currentUser));
-    showApp();
+  const user = users.find(u => u.name.toLowerCase() === name.toLowerCase() && u.birthday === birthday);
+  
+  if (user) {
+    localStorage.setItem('loggedInUser', JSON.stringify(user));
+    window.location.href = 'feed.html';
   } else {
-    loginError.textContent = 'Invalid credentials';
+    alert('Invalid username or birthday!');
   }
-}
+});
 
-logoutBtn.onclick = ()=>{
-  if(confirm('Logout?')){
-    currentUser = null;
-    localStorage.removeItem('memoryLaneUser');
-    loginScreen.style.display='flex';
-    appDiv.style.display='none';
+window.addEventListener('DOMContentLoaded', () => {
+  const currentUser = localStorage.getItem('loggedInUser');
+  if (currentUser) {
+    window.location.href = 'feed.html';
   }
-}
-
-function showApp(){
-  loginScreen.style.display='none';
-  appDiv.style.display='flex';
-  welcomeUser.textContent = currentUser.name;
-  renderSidebar();
-  viewProfile(currentUser.name);
-}
+});
