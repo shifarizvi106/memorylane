@@ -1,94 +1,69 @@
-// auth.js
 document.addEventListener('DOMContentLoaded', function() {
   const loginForm = document.getElementById('loginForm');
-  const errorMessage = document.getElementById('loginError');
-  
-  // Predefined users - you can expand this list
+  const loginError = document.getElementById('loginError');
+  const loginBtn = document.getElementById('loginBtn');
+
+  // Predefined users
   const users = [
-    { name: "Ritika", birthday: "6th July 2008" },
-    { name: "Vidhi", birthday: "12th November 2008" },
-    { name: "Saksham", birthday: "24th January 2009" },
-    { name: "Harshit", birthday: "23rd January 2007" },
-    { name: "Sai", birthday: "4th March 2008" },
-    { name: "Juili", birthday: "25th May 2008" },
-    { name: "Kunal", birthday: "19th October 2008" },
-    { name: "Ayaan", birthday: "16th January 2008" },
-    { name: "Amrut", birthday: "20th September 2005" },
-    { name: "Shifa", birthday: "10th June 2008" }
+    { name: "Ritika", birthday: "6-07-2008" },
+    { name: "Vidhi", birthday: "12-11-2008" },
+    { name: "Saksham", birthday: "24-01-2009" },
+    { name: "Harshit", birthday: "23-01-2007" },
+    { name: "Sai", birthday: "4-03-2008" },
+    { name: "Juili", birthday: "25-05-2008" },
+    { name: "Kunal", birthday: "19-10-2008" },
+    { name: "Ayaan", birthday: "16-10-2008" },
+    { name: "Amrut", birthday: "20-09-2005" },
+    { name: "Shifa", birthday: "10-06-2008" }
   ];
 
-  // Check if user is already logged in
-  const currentUser = localStorage.getItem('loggedInUser');
-  if (currentUser) {
+  // Redirect if already logged in
+  if (localStorage.getItem('currentUser')) {
     window.location.href = 'feed.html';
-    return;
   }
 
-  // Handle login form submission
-  if (loginForm) {
-    loginForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const name = document.getElementById('username').value.trim();
-      const birthday = document.getElementById('password').value.trim();
+  // Handle login
+  loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('username').value.trim();
+    const birthday = document.getElementById('password').value.trim();
 
-      // Validation
-      if (!name || !birthday) {
-        showError('Please enter both username and birthday');
-        return;
-      }
+    if (!username || !birthday) {
+      showError('Please enter both username and birthday');
+      return;
+    }
 
-      // Find user (case-insensitive name match, exact birthday match)
-      const user = users.find(u => 
-        u.name.toLowerCase() === name.toLowerCase() && 
-        u.birthday === birthday
-      );
+    const user = users.find(u => 
+      u.name.toLowerCase() === username.toLowerCase() && 
+      u.birthday === birthday
+    );
+    
+    if (user) {
+      // Show loading state
+      loginBtn.textContent = 'Logging in...';
+      loginBtn.disabled = true;
       
-      if (user) {
-        // Successful login
-        localStorage.setItem('loggedInUser', JSON.stringify(user));
-        showError(''); // Clear any previous errors
-        
-        // Optional: Show loading state
-        const loginBtn = document.getElementById('loginBtn');
-        if (loginBtn) {
-          loginBtn.textContent = 'Logging in...';
-          loginBtn.disabled = true;
-        }
-        
-        // Redirect after a brief delay for better UX
-        setTimeout(() => {
-          window.location.href = 'feed.html';
-        }, 1000);
-        
-      } else {
-        showError('Invalid username or birthday! Please try again.');
-      }
-    });
-  }
+      // Store user and redirect
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      setTimeout(() => {
+        window.location.href = 'feed.html';
+      }, 1000);
+    } else {
+      showError('Invalid username or birthday!');
+    }
+  });
 
   function showError(message) {
-    if (errorMessage) {
-      errorMessage.textContent = message;
-      errorMessage.style.display = message ? 'block' : 'none';
-    } else {
-      // Fallback to alert if error element doesn't exist
-      if (message) alert(message);
-    }
+    loginError.textContent = message;
+    loginError.style.display = 'block';
   }
 
-  // Optional: Add real-time validation
-  const usernameInput = document.getElementById('username');
-  const passwordInput = document.getElementById('password');
+  // Clear error on input
+  document.getElementById('username').addEventListener('input', clearError);
+  document.getElementById('password').addEventListener('input', clearError);
   
-  if (usernameInput && passwordInput) {
-    [usernameInput, passwordInput].forEach(input => {
-      input.addEventListener('input', function() {
-        // Clear error when user starts typing
-        if (errorMessage && errorMessage.style.display !== 'none') {
-          showError('');
-        }
-      });
-    });
+  function clearError() {
+    loginError.style.display = 'none';
   }
 });
