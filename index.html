@@ -1,493 +1,62 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Memory Lane — Mobile Friendly</title>
-<style>
-  /* ===== Discord-like dark theme ===== */
-  :root{
-    --bg:#2f3136; --panel:#36393f; --muted:#72767d; --accent:#5865f2; --danger:#f04747;
-    --card:#202225; --text:#dcddde; --radius:10px;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto;
-    background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;
-  }
-
-  /* Layout */
-  .app {
-    display:grid;
-    grid-template-columns:260px 1fr;
-    gap:12px;
-    height:100vh;
-    padding:12px;
-  }
-
-  /* Mobile: single column, sidebar collapsible */
-  @media(max-width:860px){
-    .app{grid-template-columns:1fr; grid-template-rows:auto 1fr}
-    .sidebar{position:fixed; left:0; top:0; bottom:0; width:260px; transform:translateX(-110%); transition:transform .22s; z-index:30}
-    .sidebar.open{transform:translateX(0)}
-    .overlay-backdrop{display:block}
-  }
-
-  /* Header */
-  .header{
-    grid-column:1/-1;
-    background:var(--panel); border-radius:var(--radius); padding:12px 14px;
-    display:flex; align-items:center; justify-content:space-between; gap:12px;
-  }
-  .brand{display:flex;align-items:center;gap:10px}
-  .logo{
-    width:40px;height:40px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#ec4899);
-    display:flex;align-items:center;justify-content:center;font-weight:800;color:white;
-  }
-  .title{font-weight:700}
-  .header-right{display:flex;gap:10px;align-items:center}
-
-  /* Sidebar */
-  .sidebar{
-    background:#202225; padding:12px; border-radius:var(--radius); overflow:auto; height:calc(100vh - 36px);
-  }
-  .sidebar h3{color:var(--accent); margin:4px 0 8px; font-size:14px}
-  .friend-btn{
-    display:flex;align-items:center;gap:8px;padding:10px;border-radius:8px;background:transparent;border:none;color:var(--text);
-    cursor:pointer;width:100%;text-align:left;font-weight:600;margin-bottom:8px;transition:background .16s;
-  }
-  .friend-btn:hover{background:#2a2d31}
-  .friend-btn.active{background:var(--accent);color:white}
-
-  /* Main content area */
-  .main {
-    background:var(--panel); border-radius:var(--radius); padding:12px; height:calc(100vh - 36px); overflow:auto;
-    display:flex; flex-direction:column;
-  }
-
-  .profile-hdr{
-    display:flex; align-items:center; gap:12px; margin-bottom:12px;
-  }
-  .profile-title{font-weight:800; font-size:1.15rem}
-  .bio-area{flex:1; background:#2b2d31; border-radius:8px; border:none; color:var(--text); padding:8px; min-height:44px; resize:none}
-
-  /* upload row */
-  .upload{
-    display:flex; gap:8px; align-items:center; margin:12px 0; flex-wrap:wrap;
-  }
-  .upload input[type=file], .upload input[type=text], .upload input[type=date]{
-    background:#2b2d31;border:1px solid #37393c;color:var(--text); padding:8px;border-radius:8px;
-  }
-  .upload input[type=file]{flex:1; min-width:120px}
-  .upload input[type=text]{flex:2; min-width:140px}
-  .btn{background:var(--accent); color:white; border:none;padding:8px 12px;border-radius:8px;font-weight:700; cursor:pointer}
-  .btn-danger{background:var(--danger)}
-  .btn-ghost{background:transparent;border:1px solid #3a3c3f;color:var(--text)}
-
-  /* posts grid */
-  .posts{
-    display:grid; grid-template-columns:repeat(3,1fr); gap:12px; align-self:stretch;
-  }
-  @media(max-width:1100px){ .posts{grid-template-columns:repeat(2,1fr)} }
-  @media(max-width:620px){ .posts{grid-template-columns:1fr} }
-
-  .post-card{
-    background:#2b2d31; border-radius:10px; padding:10px; display:flex;flex-direction:column; gap:8px; box-shadow:0 6px 18px rgba(0,0,0,0.3)
-  }
-  .post-card img{width:100%;height:180px;object-fit:cover;border-radius:8px;cursor:pointer}
-  .meta-row{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:0.9rem;color:var(--muted)}
-  .actions{display:flex;gap:8px;align-items:center}
-  .comment-line{display:flex;gap:8px;margin-top:8px}
-  .comment-input{flex:1;padding:8px;border-radius:8px;border:none;background:#35373a;color:var(--text)}
-
-  /* empty */
-  .empty{padding:40px;text-align:center;color:var(--muted)}
-
-  /* overlay for sidebar on mobile */
-  .overlay-backdrop{
-    display:none;
-    position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:25;
-  }
-</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memory Lane</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-<!-- Header -->
-<div class="header">
-  <div class="brand">
-    <div class="logo">ML</div>
-    <div>
-      <div class="title">Memory Lane</div>
-      <div style="font-size:12px;color:var(--muted)">Dark • Private • Local</div>
+  <!-- Login screen -->
+  <div id="loginScreen">
+    <div class="login-container">
+      <h2>Memory Lane</h2>
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Birthday (dd-mm-yyyy)">
+      <button id="loginBtn">Login</button>
+      <p id="loginError"></p>
     </div>
   </div>
 
-  <div class="header-right">
-    <button id="hamburger" class="btn-ghost" style="display:none">☰</button>
-    <div id="welcomeText" style="font-weight:700"></div>
-    <button id="logoutBtn" class="btn btn-danger">Logout</button>
-  </div>
-</div>
-
-<div class="app" id="appLayout">
-  <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-    <h3>Friends</h3>
-    <!-- friend buttons inserted here -->
-    <div style="margin-top:12px"><button id="clearBtn" class="btn-ghost" title="Clear all data">Clear all data</button></div>
-  </div>
-
-  <!-- Main -->
-  <div class="main" id="main">
-    <div class="profile-hdr">
-      <div style="display:flex; flex-direction:column;">
-        <div id="profileTitle" class="profile-title">Profile</div>
-        <div id="profileSub" style="font-size:12px;color:var(--muted)"></div>
+  <!-- App container -->
+  <div class="app" id="app" style="display:none;">
+    <div class="app-header">
+      <h1>🕒 Memory Lane</h1>
+      <div class="header-actions">
+        <span>Welcome, <strong id="welcomeUser"></strong></span>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
       </div>
-      <textarea id="bio" class="bio-area" placeholder="Write your bio..."></textarea>
     </div>
 
-    <div class="upload" role="form" aria-label="Upload memory">
-      <input id="fileInput" type="file" accept="image/*" />
-      <input id="caption" type="text" placeholder="Caption (required)" />
-      <input id="memDate" type="date" />
-      <button id="postBtn" class="btn">Post</button>
-    </div>
+    <div class="app-body">
+      <div class="sidebar" id="sidebar">
+        <h2>Friends</h2>
+        <!-- Friends buttons inserted here -->
+      </div>
 
-    <div id="posts" class="posts"></div>
+      <div class="main-content">
+        <div class="profile-header">
+          <h1 id="profileName">Profile</h1>
+          <textarea id="bioInput" placeholder="Write your bio..." rows="3"></textarea>
+        </div>
+
+        <div class="upload-section" id="uploadSection">
+          <input type="file" id="imageUpload" accept="image/*">
+          <input type="text" id="captionInput" placeholder="What's on your mind?">
+          <input type="date" id="memoryDate">
+          <button id="uploadBtn">Post Memory</button>
+        </div>
+
+        <div class="posts-grid" id="postsGrid">
+          <!-- Posts will appear here -->
+        </div>
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="overlay-backdrop" id="backdrop"></div>
-
-<!-- Full image overlay will be appended dynamically -->
-
-<!-- Login screen -->
-<div id="login" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:40;">
-  <div style="background:var(--panel);padding:18px;border-radius:12px;min-width:300px">
-    <h2 style="color:var(--accent);margin:0 0 8px">Memory Lane</h2>
-    <input id="loginName" placeholder="Name" style="width:100%;padding:8px;border-radius:8px;border:none;background:#2b2d31;color:var(--text);margin-bottom:8px">
-    <input id="loginPass" placeholder="Birthday (dd-mm-yyyy)" style="width:100%;padding:8px;border-radius:8px;border:none;background:#2b2d31;color:var(--text);margin-bottom:8px">
-    <div style="display:flex;gap:8px">
-      <button id="loginBtn" class="btn" style="flex:1">Login</button>
-      <button id="demoBtn" class="btn-ghost" style="flex:1">Quick Demo</button>
-    </div>
-    <div id="loginMsg" style="color:var(--danger);margin-top:10px;min-height:18px"></div>
-  </div>
-</div>
-
-<script>
-/* ========= App data (initial) ========= */
-const initialUsers = [
-  {name:'Shifa', birthday:'10-06-2008', bio:'', id:1},
-  {name:'Ritika', birthday:'06-07-2008', bio:'', id:2},
-  {name:'Vidhi', birthday:'12-11-2008', bio:'', id:3},
-  {name:'Saksham', birthday:'24-01-2009', bio:'', id:4},
-  {name:'Harshit', birthday:'23-01-2007', bio:'', id:5},
-  {name:'Sai', birthday:'04-03-2008', bio:'', id:6},
-  {name:'Juili', birthday:'25-05-2008', bio:'', id:7},
-  {name:'Kunal', birthday:'19-10-2008', bio:'', id:8},
-  {name:'Ayaan', birthday:'16-01-2008', bio:'', id:9},
-  {name:'Amrut', birthday:'20-09-2005', bio:'', id:10}
-];
-
-let users = [];
-let posts = []; // {id,user,image,caption,date,likes,comments: [{user,text,date}]}
-let currentUser = null;
-let activeProfile = null;
-
-/* ======= Storage helpers ======= */
-const KEY_USERS = 'ml_users_v2';
-const KEY_POSTS = 'ml_posts_v2';
-const KEY_CUR = 'ml_current_v2';
-
-function loadAll(){
-  try{
-    users = JSON.parse(localStorage.getItem(KEY_USERS)) || JSON.parse(JSON.stringify(initialUsers));
-  }catch(e){ users = JSON.parse(JSON.stringify(initialUsers)); }
-  try{ posts = JSON.parse(localStorage.getItem(KEY_POSTS)) || []; }catch(e){ posts = []; }
-  try{ currentUser = JSON.parse(localStorage.getItem(KEY_CUR)) || null; }catch(e){ currentUser = null; }
-}
-function saveAll(){
-  try{
-    localStorage.setItem(KEY_USERS, JSON.stringify(users));
-    localStorage.setItem(KEY_POSTS, JSON.stringify(posts));
-    if(currentUser) localStorage.setItem(KEY_CUR, JSON.stringify(currentUser));
-  }catch(e){
-    console.error('save error', e);
-    alert('Error saving data — maybe image is too large. Try smaller image.');
-  }
-}
-
-/* ======= DOM refs ======= */
-const sidebar = document.getElementById('sidebar');
-const profileTitle = document.getElementById('profileTitle');
-const profileSub = document.getElementById('profileSub');
-const bio = document.getElementById('bio');
-const postsEl = document.getElementById('posts');
-const loginModal = document.getElementById('login');
-const loginBtn = document.getElementById('loginBtn');
-const demoBtn = document.getElementById('demoBtn');
-const loginMsg = document.getElementById('loginMsg');
-const loginName = document.getElementById('loginName');
-const loginPass = document.getElementById('loginPass');
-const welcomeText = document.getElementById('welcomeText');
-const logoutBtn = document.getElementById('logoutBtn');
-const fileInput = document.getElementById('fileInput');
-const captionInput = document.getElementById('caption');
-const memDate = document.getElementById('memDate');
-const postBtn = document.getElementById('postBtn');
-const clearBtn = document.getElementById('clearBtn');
-const backdrop = document.getElementById('backdrop');
-const hamburger = document.getElementById('hamburger');
-
-/* ======= Utilities ======= */
-function uid(){ return Date.now() + '_' + Math.random().toString(36).slice(2,9); }
-function fmtDate(d){
-  if(!d) return 'Unknown date';
-  const dt = new Date(d);
-  if(isNaN(dt)) return d;
-  return dt.toLocaleDateString(undefined, { day:'2-digit', month:'short', year:'numeric' });
-}
-
-/* ======= Responsive: hamburger show/hide ======= */
-function handleResize(){
-  if(window.innerWidth <= 860){
-    hamburger.style.display = 'inline-flex';
-  } else {
-    hamburger.style.display = 'none';
-    // ensure sidebar visible in desktop
-    document.getElementById('sidebar').classList.remove('open');
-    backdrop.style.display = 'none';
-  }
-}
-window.addEventListener('resize', handleResize);
-handleResize();
-hamburger.onclick = ()=> {
-  const sb = document.getElementById('sidebar');
-  sb.classList.toggle('open');
-  backdrop.style.display = sb.classList.contains('open') ? 'block' : 'none';
-};
-backdrop.onclick = ()=> { document.getElementById('sidebar').classList.remove('open'); backdrop.style.display='none'; };
-
-/* ======= Load / Init ======= */
-loadAll();
-// default date
-memDate.value = new Date().toISOString().slice(0,10);
-
-/* auto login if currentUser exists */
-if(currentUser){
-  showApp();
-} else {
-  loginModal.style.display = 'flex';
-}
-
-/* ======= Login logic ======= */
-loginBtn.addEventListener('click', ()=> {
-  const name = loginName.value.trim();
-  const pass = loginPass.value.trim();
-  if(!name || !pass){ loginMsg.textContent = 'Enter name + birthday'; return; }
-  const u = users.find(x => x.name.toLowerCase() === name.toLowerCase() && x.birthday === pass);
-  if(!u){ loginMsg.textContent = 'Invalid credentials'; return; }
-  currentUser = u;
-  saveAll();
-  loginModal.style.display = 'none';
-  showApp();
-});
-demoBtn.addEventListener('click', ()=> {
-  const u = users.find(x => x.name === 'Shifa');
-  currentUser = u; saveAll(); loginModal.style.display='none'; showApp();
-});
-
-/* ======= Show app ======= */
-function showApp(){
-  welcomeText.textContent = currentUser.name;
-  renderSidebar();
-  viewProfile(currentUser.name);
-}
-
-/* ======= Sidebar rendering ======= */
-function renderSidebar(){
-  const sb = document.getElementById('sidebar');
-  // clear but keep heading & clear button area
-  sb.innerHTML = '<h3>Friends</h3>';
-  users.forEach(u=>{
-    const b = document.createElement('button');
-    b.className = 'friend-btn';
-    b.textContent = u.name;
-    b.addEventListener('click', ()=> {
-      // active style
-      document.querySelectorAll('.friend-btn').forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      // if on mobile close sidebar
-      if(window.innerWidth <= 860){ document.getElementById('sidebar').classList.remove('open'); backdrop.style.display='none'; }
-      viewProfile(u.name);
-    });
-    sb.appendChild(b);
-  });
-  // keep clear button at bottom
-  sb.appendChild(document.createElement('div')); // spacer
-  const cbtn = clearBtn;
-  cbtn.onclick = ()=> { if(confirm('Clear all data?')){ localStorage.removeItem(KEY_USERS); localStorage.removeItem(KEY_POSTS); localStorage.removeItem(KEY_CUR); location.reload(); } };
-  // append clear button area already in markup
-}
-
-/* ======= View profile (shows that user's posts) ======= */
-function viewProfile(name){
-  activeProfile = name;
-  const u = users.find(x=>x.name === name);
-  if(!u) return;
-  profileTitle.textContent = `${u.name}'s Profile`;
-  profileSub.textContent = `Birthday: ${u.birthday}`;
-  bio.value = u.bio || '';
-  bio.disabled = (u.name !== currentUser.name);
-  renderPostsFor(name);
-}
-
-/* ======= Render posts for a user ======= */
-function renderPostsFor(userName){
-  postsEl = document.getElementById('posts');
-  postsEl.innerHTML = '';
-  const userPosts = posts.filter(p => p.user === userName).sort((a,b)=>b.id - a.id);
-  if(userPosts.length === 0){
-    postsEl.innerHTML = `<div class="empty"><div style="font-size:34px">📸</div><div style="margin-top:8px">No memories yet</div></div>`;
-    return;
-  }
-  userPosts.forEach(post => {
-    const card = document.createElement('div'); card.className='post-card';
-    const img = document.createElement('img'); img.src = post.image; img.alt = post.caption || '';
-    img.addEventListener('click', ()=> openImageOverlay(post));
-    const caption = document.createElement('div'); caption.className='post-caption'; caption.textContent = post.caption || '';
-    const dateDiv = document.createElement('div'); dateDiv.className='meta-row'; dateDiv.textContent = fmtDate(post.date);
-    const actions = document.createElement('div'); actions.className='post-actions';
-    // likes
-    const likeBtn = document.createElement('button'); likeBtn.className='btn'; likeBtn.textContent = `❤️ ${post.likes||0}`;
-    likeBtn.addEventListener('click', ()=> {
-      if(!post.likes) post.likes = 0; post.likes++; saveAll(); renderPostsFor(userName);
-    });
-    actions.appendChild(likeBtn);
-    // delete if owner
-    if(post.user === currentUser.name){
-      const del = document.createElement('button'); del.className='btn btn-danger'; del.textContent='Delete';
-      del.addEventListener('click', ()=> {
-        if(confirm('Delete this memory?')){ posts = posts.filter(p=>p.id !== post.id); saveAll(); renderPostsFor(userName); }
-      });
-      actions.appendChild(del);
-    }
-    // comment input
-    const commentLine = document.createElement('div'); commentLine.className='comment-line';
-    const cinput = document.createElement('input'); cinput.className='comment-input'; cinput.placeholder='Add a comment...';
-    cinput.addEventListener('keydown', (e)=> { if(e.key === 'Enter'){ postComment(post, cinput.value); cinput.value=''; viewProfile(userName); }});
-    const cbtn = document.createElement('button'); cbtn.className='btn btn-success'; cbtn.textContent='Post';
-    cbtn.addEventListener('click', ()=> { postComment(post, cinput.value); cinput.value=''; viewProfile(userName); });
-    commentLine.appendChild(cinput); commentLine.appendChild(cbtn);
-
-    // comments list
-    const commentsDiv = document.createElement('div'); commentsDiv.className='comments';
-    if(post.comments && post.comments.length){
-      post.comments.forEach(c => {
-        const cd = document.createElement('div'); cd.className='comment';
-        cd.innerHTML = `<strong>${escapeHtml(c.user)}</strong>: ${escapeHtml(c.text)} <div style="font-size:0.7rem;color:var(--muted)">${fmtDate(c.date)}</div>`;
-        commentsDiv.appendChild(cd);
-      });
-    }
-
-    card.appendChild(img);
-    card.appendChild(caption);
-    card.appendChild(dateDiv);
-    card.appendChild(actions);
-    card.appendChild(commentLine);
-    card.appendChild(commentsDiv);
-    postsEl.appendChild(card);
-  });
-}
-
-/* ======= Post comment ======= */
-function postComment(post, text){
-  if(!text || !text.trim()) return;
-  post.comments = post.comments || [];
-  post.comments.push({ user: currentUser.name, text: text.trim(), date: new Date().toISOString() });
-  saveAll();
-}
-
-/* ======= Bio editing (debounced) ======= */
-let bioTimer = null;
-bio.addEventListener('input', ()=>{
-  if(!currentUser) return;
-  clearTimeout(bioTimer);
-  bioTimer = setTimeout(()=>{
-    currentUser.bio = bio.value;
-    users = users.map(u => u.name === currentUser.name ? currentUser : u);
-    saveAll();
-    renderSidebar();
-  }, 600);
-});
-
-/* ======= Image resize & upload ======= */
-function resizeImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.8){
-  return new Promise((res, rej)=>{
-    const img = new Image();
-    const fr = new FileReader();
-    fr.onload = e => { img.src = e.target.result; };
-    img.onload = ()=>{
-      let [w,h] = [img.width,img.height];
-      const ratio = Math.min(maxWidth / w, maxHeight / h, 1);
-      w = Math.round(w * ratio); h = Math.round(h * ratio);
-      const canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img,0,0,w,h);
-      const dataUrl = canvas.toDataURL('image/jpeg', quality);
-      res(dataUrl);
-    };
-    img.onerror = rej;
-    fr.onerror = rej;
-    fr.readAsDataURL(file);
-  });
-}
-
-postBtn.addEventListener('click', async ()=>{
-  const file = fileInput.files[0];
-  const caption = captionInput.value.trim();
-  const dateVal = memDate.value || new Date().toISOString();
-  if(!file){ alert('Please select an image.'); return; }
-  if(!caption){ alert('Please add a caption.'); return; }
-  // limit size: try to resize
-  try{
-    const resized = await resizeImage(file, 1200, 1200, 0.8);
-    const post = { id: Date.now(), user: currentUser.name, image: resized, caption, date: dateVal, likes: 0, comments: [] };
-    posts.push(post); saveAll(); viewProfile(currentUser.name);
-    // reset
-    fileInput.value = ''; captionInput.value=''; memDate.value = new Date().toISOString().slice(0,10);
-  }catch(err){
-    console.error(err);
-    alert('Could not process image — try a smaller file.');
-  }
-});
-
-/* ======= Open image overlay ======= */
-function openImageOverlay(post){
-  const overlay = document.createElement('div'); overlay.className = 'overlay';
-  overlay.innerHTML = `
-    <button class="close-overlay">✕</button>
-    <img src="${post.image}" alt="${escapeHtml(post.caption)}"/>
-    <div style="max-width:720px;padding:6px;text-align:center">${escapeHtml(post.caption) || ''}</div>
-  `;
-  overlay.querySelector('.close-overlay').addEventListener('click', ()=> overlay.remove());
-  overlay.addEventListener('click', (e)=>{ if(e.target === overlay) overlay.remove(); });
-  document.body.appendChild(overlay);
-}
-
-/* ======= Escape html for safety when showing user strings ======= */
-function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-/* ======= Logout button ======= */
-logoutBtn.addEventListener('click', ()=> {
-  if(confirm('Logout?')){ currentUser = null; localStorage.removeItem(KEY_CUR); document.getElementById('login').style.display='flex'; }
-});
-
-/* ======= Render posts convenience ======= */
-function renderPostsFor(name){ renderPostsFor(name); } // placeholder to satisfy linter — real function is above
-
-/* ======= Utility: formatDate wrap
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/feed.js"></script>
+</body>
+</html>
